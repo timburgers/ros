@@ -1,0 +1,9 @@
+<launch>
+  <!-- radar driver -->
+  <node name="radar_ros_driver" pkg="radar_ros_driver" type="radar_ros_driver" output="screen"/> 
+  <node name="radar_ros_filter" pkg="radar_ros_driver" type="radar_ros_filter"/>
+  <!-- radar server -->
+  <node name="radar_server" pkg="radar_server" type="radar_server"></node>
+  <!-- plotjuggler: real-time plots -->
+  <node name="plotjuggler" pkg="plotjuggler" type="plotjuggler" args="--layout /home/marina/Pi_Git/ros_radar_mine/myLayout_filter.xml"></node>
+</launch>

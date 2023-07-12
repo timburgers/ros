@@ -1,0 +1,29 @@
+<!-- lauch file to record from /radar_targets topic -->
+<launch>
+  <!-- arguments to record -->
+  <arg name="user" default="pi"/>
+  <arg name="record_targets" default="true"/>
+  <arg name="record_motor" default="true"/>
+  <arg name="record_start_delay" default="10.0"/>
+
+  <!-- radar driver -->
+  <node name="radar_ros_driver" pkg="radar_ros_driver" type="radar_ros_driver" output="screen" if="$(arg record_targets)"/>
+  
+  <!-- motor control -->
+  <include file="$(find motor_control)/launch/motor_control.launch" if="$(arg record_motor)"/>
+
+  <!-- rosbag record radar targets -->
+  <node pkg="rosbag" type="record" name="rosbag_record_targets"
+       args="record -o /home/$(arg user)/Pi_Git/ros_radar_mine/record_radar_data/targets /radar_targets"
+       launch-prefix="bash -c 'sleep $(arg record_start_delay); $0 $@' "
+       if="$(arg record_targets)"/>
+
+  <!-- rosbag record motor control -->
+  <node pkg="rosbag" type="record" name="rosbag_record_motor"
+       args="record -o /home/$(arg user)/Pi_Git/ros_radar_mine/record_radar_data/motor /motor_control"
+       launch-prefix="bash -c 'sleep $(arg record_start_delay); $0 $@' "
+       if="$(arg record_motor)"/>
+
+  <!-- plotjuggler: real-time plots launch-prefix="bash -c 'sleep $(arg record_start_delay); $0 $@' " -->
+  <!-- <node name="plotjuggler" pkg="plotjuggler" type="plotjuggler" args="-layout /home/marina/Pi_Git/ros_radar_mine/myLayout_filter.xml"></node> -->
+</launch>
