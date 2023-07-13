@@ -30,7 +30,7 @@
         machine="pi_client"
         pkg="motor_control"
         type="controller_full.py"
-        name="snn_controller"
+        name="controller"
         output="screen"
     />
 
