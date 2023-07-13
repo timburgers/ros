@@ -25,7 +25,8 @@ class Controller:
     def __init__(self):
 
         # Subscribers and Publisher
-        self.sub_radar = rospy.Subscriber("/radar_filter", MyEventArray, self.callback_radar)
+        # self.sub_radar = rospy.Subscriber("/radar_filter", MyEventArray, self.callback_radar)
+        self.sub_h_meas = rospy.Subscriber("/h_meas", Float32, self.callback_h_meas)
         self.sub_h_ref = rospy.Subscriber("/h_ref", Float32, self.callback_h_ref)
         self.pub_motor = rospy.Publisher("/motor_control", MotorCommand, queue_size = 1)
 
@@ -44,20 +45,21 @@ class Controller:
     def callback_h_ref(self, msg):
         self.h_ref = msg.data
 
-    def callback_radar(self, msg):
-        """
-        Assuming that there's ONLY 1 TARGET
-        """
-        tmp_filter = msg.range_filter
-        tmp_range  = msg.target_events
+    def callback_meas_h(self, msg):
+        pass
+        # """
+        # Assuming that there's ONLY 1 TARGET
+        # """
+        # tmp_filter = msg.range_filter
+        # tmp_range  = msg.target_events
 
-        if len(tmp_filter) != 0:
-            self.range_filter = tmp_filter[0]
-        #self.range = tmp_range[0].range
+        # if len(tmp_filter) != 0:
+        #     self.range_filter = tmp_filter[0]
+        # #self.range = tmp_range[0].range
 
     def update_command(self):
         
-        self.error = self.h_ref - self.range_filter
+        self.error = self.h_ref - 0 #self.range_filter
         u = self.pid.update_simple(self.error)
 
         self.pub_msg.ts = rospy.get_rostime()

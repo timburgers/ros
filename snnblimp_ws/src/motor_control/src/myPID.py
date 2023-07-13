@@ -1,24 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Apr 6 11:44:07 2021
-
-@author: marina
-"""
 
 class PID:
     
     def __init__(self, P, I, D, dt, simple):
-        """
-        PID definitions
-        
-        Parameters
-        ----------
-        P : Proportional gain
-        I : Integral gain
-        D : Derivative gain
-        dt : Sample time
-        """
         self.Kp = P
         self.Ki = I
         self.Kd = D
@@ -46,24 +31,6 @@ class PID:
         self.previous_error = 0
         self.window_up      = 20
         
-    def clear(self):
-        """
-        Variables initialization for update()
-        """
-        
-        if self.Ki != 0:
-            self.Ti = self.Kp/self.Ki
-        else:
-            self.Ti = 10000000
-            
-        if self.Kd != 0:
-            self.Td = self.Kd/self.Kp
-        else:
-            self.Td = 0
-        
-        self.error_tm2 = 0
-        self.error_tm1 = 0
-        self.u_tm1     = 0
     
     def update_simple(self, error):
         """
@@ -98,25 +65,6 @@ class PID:
         u = self.Kp * error + self.Ki * self.integral + self.Kd * self.derivative
         
         return u
-    
-    def update(self, error):
-        """
-        PID implementation based on https://en.wikipedia.org/wiki/PID_controller#Discrete_implementation
-        """
-        
-        first_term  = 1 + self.dt/self.Ti + self.Td/self.dt
-        second_term = -1 -2*self.Td/self.dt
-        third_term  = self.Td/self.dt
-        
-        u = self.u_tm1 + self.Kp * (first_term * error + second_term * self.error_tm1 + third_term * self.error_tm2)
-        
-        self.error_tm2 = self.error_tm1
-        self.error_tm1 = error
-        self.u_tm1 = u
-        
-        return u
-    
-    
     
     
     
