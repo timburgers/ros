@@ -27,9 +27,9 @@
         <param name="servoPin" value="17" />
     </node>
     <node
-        machine="comp_server"
+        machine="pi_client"
         pkg="motor_control"
-        type="href.py"
+        type="controller_full.py"
         name="controller"
         output="screen"
     />
