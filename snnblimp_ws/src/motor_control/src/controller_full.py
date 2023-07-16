@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Pytorch version: https://github.com/isakbosman/pytorch_arm_builds/blob/main/torch-1.7.0a0-cp37-cp37m-linux_armv6l.whl
 
 """
 # TO DO: 
