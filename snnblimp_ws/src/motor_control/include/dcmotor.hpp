@@ -33,7 +33,6 @@ private:
     //std_msgs::Int32 speed_msg;
 
 public:
-
     Motor();
     void setSpeed(const motor_control::MotorCommand& msg);
 
