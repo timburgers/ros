@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # Pytorch version: https://github.com/isakbosman/pytorch_arm_builds/blob/main/torch-1.7.0a0-cp37-cp37m-linux_armv6l.whl
-
+# https://github.com/nmilosev/pytorch-arm-builds
+# Can not install noetic on pi (python3.7 and torch are installed)
+# Can not install a torch for python2 (kinetic and python2.7 are installed)
 """
 # TO DO: 
     1) Check publisher queue size
@@ -24,7 +26,7 @@ from std_msgs.msg import Float32
 from motor_control.msg import MotorCommand
 
 # Global variables:
-FREQUENCY = 3.0
+FREQUENCY = 5.0
 FILENAME = "345-morning-tree"
 
 class Controller:
@@ -33,8 +35,9 @@ class Controller:
 
         # Subscribers and Publisher
         # self.sub_radar = rospy.Subscriber("/h_meas", MyEventArray, self.callback_radar)
+        self.sub_h_meas = rospy.Subscriber("/h_meas", Float32, self.callback_h_meas)
         self.sub_h_ref = rospy.Subscriber("/h_ref", Float32, self.callback_h_ref)
-        self.pub_motor = rospy.Publisher("/motor_control", MotorCommand, queue_size = 1)
+        self.pub_motor = rospy.Publisher("/motor_control", MotorCommand, queue_size = 1)        #send to the motor_controller
         self.pub_pid   = rospy.Publisher("/u_pid", Float32, queue_size = 1)
         self.pub_snn   = rospy.Publisher("/u_snn", Float32, queue_size = 1)
 
@@ -50,20 +53,24 @@ class Controller:
         self.error = 0.0
 
         # Controllers
-        self.pid = PID.PID(5, 0.35, 0.5, 0.0333333333, True) # self.pid = PID.PID(P, I, D, dt, simple)
+        self.pid = PID.PID(2, 0.3, 0.3, 1/FREQUENCY, True) # self.pid = PID.PID(P, I, D, dt, simple)
         
         # SNN
         self.init_SNN_model()
 
 
     def init_SNN_model(self):
-        pickle_in = open(FILENAME+".pkl","rb")
+        # Unpack the selected .pkl file 
+        pickle_in = open("/home/tim/ros/snnblimp_ws/src/motor_control/src/"+FILENAME+".pkl","rb")
         dict_solutions = pickle.load(pickle_in)
+
+        #Unpack in usefull variables
         solution             = dict_solutions["best_solution"]      #Lowest error (Overall, not only test sequence)
         test_solutions       = dict_solutions["test_solutions"]     #All solutions to the test sequence
         solutions_error      = dict_solutions["error"]              #All errors of the test solutions
-        config               = dict_solutions["config"]
+        config               = dict_solutions["config"]             #Configfile set for the evolution of the network
 
+        # Select the best performing (lowest test error) in the network
         best_sol_ind = np.argmin(solutions_error)
         self.solution = test_solutions[best_sol_ind+1] #+1 since first of solution_testrun is only zeros
 
@@ -72,9 +79,11 @@ class Controller:
         if self.enc_lay_enabled: self.controller = Encoding_L1_Decoding_SNN(None, config["NEURONS"], config["LAYER_SETTING"])
         else:              self.controller = L1_Decoding_SNN(None, config["NEURONS"], config["LAYER_SETTING"])
 
+        # Convert the model weight in a dict 
         final_parameters = model_weights_as_dict(self.controller, solution)
         self.controller.load_state_dict(final_parameters)
 
+        # Assign the complete network its paramaeters (since some parameters are shared during training)
         if self.enc_lay_enabled: self.controller.l0.init_reshape()
         self.controller.l1.init_reshape()
         self.controller.l2.init_reshape()
@@ -88,7 +97,7 @@ class Controller:
     def callback_h_ref(self, msg):
         self.h_ref = msg.data
 
-    def callback_radar(self, msg):
+    def callback_h_meas(self, msg):
         pass
 
     def update_PID(self):
@@ -96,7 +105,7 @@ class Controller:
         return u
 
     def update_SNN(self):
-        error = float(self.error)
+        error = torch.Tensor([self.error])
         
         if self.enc_lay_enabled:      self.state_l0, self.state_l1, self.state_l2 = self.controller(error,self.state_l0, self.state_l1, self.state_l2)
         else:                         self.state_l1, self.state_l2 = self.controller(error, self.state_l1, self.state_l2)
@@ -104,14 +113,19 @@ class Controller:
         return self.state_l2
 
     def update_command(self):
-        
         self.error = self.h_ref - 0
+        
+        # Create motor command from PID
+        u = self.update_PID()
+        self.pub_msg_pid = u
+        self.pub_pid.publish(self.pub_msg_pid)
 
-        #u_pid = self.update_PID()
-        u_snn = self.update_SNN()
+        # Create motor command from SNN
+        # u = self.update_SNN()
+        # self.pub_msg_snn = u
+        # self.pub_snn.publish(self.pub_msg_snn)
 
-        u = u_snn * 0.7
-
+        #Create message for the motor controller
         self.pub_msg.ts = rospy.get_rostime()
 
         if u >= 0:
@@ -123,16 +137,9 @@ class Controller:
         self.pub_msg.cw_speed = u
         self.pub_msg.ccw_speed = u
 
-        #self.pub_msg_pid = u_pid
-        self.pub_msg_snn = u_snn
-
-        # self.pub_pid.publish(self.pub_msg_pid)
-        self.pub_snn.publish(self.pub_msg_snn)
-
         self.pub_motor.publish(self.pub_msg)
 
-    #def convert_command(self,u):
-    #    pass
+
 
 if __name__ == '__main__':
     rospy.init_node('controller') # Node initialization #, anonymous=True)

@@ -116,7 +116,7 @@ class Encoding_L1_Decoding_SNN(L1_Decoding_SNN):
 			
 
 	def forward(self, input_, state_l0, state_l1, state_l2):
-		input = input_[0,0,:]
+		input = input_
 		state_l0,spikes_l0 = self.l0(state_l0,input)
 		state_l1,spikes_l1 = self.l1(state_l1,spikes_l0)
 		state_l2, _ 		= self.l2(state_l2,spikes_l1)

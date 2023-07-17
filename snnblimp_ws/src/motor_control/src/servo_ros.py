@@ -39,10 +39,18 @@ class Servo:
             self.pwm.set_servo_pulsewidth(self._servoPin,correct_angle)
         #time.sleep(0.2)
 
+    def return_pos_up(self):
+        shut_down_msg = MotorCommand()
+        shut_down_msg.angle = 1
+        self.update_angle(shut_down_msg)
+
 if __name__ == '__main__':
     rospy.init_node('subscribe_to_angle') # Node initialization #, anonymous=True)
     myServo = Servo()                     # Instantiation of the Servo class
     rospy.spin()
+    rospy.on_shutdown(myServo.return_pos_up)
+
+
 
 # Garbage (that might be useful later):
 '''

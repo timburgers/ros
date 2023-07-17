@@ -73,6 +73,14 @@ class Controller:
             self.pub_msg.angle = 10
 
         self.pub_motor.publish(self.pub_msg)
+    
+    def shut_down_motor(self):
+        self.pub_msg.ts = rospy.get_rostime()
+        self.pub_msg.cw_speed = 0
+        self.pub_msg.ccw_speed = 0
+        self.pub_msg.angle = 1
+        self.pub_motor.publish(self.pub_msg)
+
 
     #def convert_command(self,u):
     #    pass
@@ -86,3 +94,5 @@ if __name__ == '__main__':
     while not rospy.is_shutdown():
         myController.update_command()
         r.sleep()
+    myController.shut_down_motor()
+    

@@ -1,8 +1,13 @@
 <launch>
-
     <!-- define local server [e.g. computer] and remote client(s) [e.g. Pi0, Pi4,...] machines -->
     <machine name="pi_client" timeout="20" address="mypi" user="pi" password="raspberry"  env-loader="/home/pi/ros/snnblimp_ws/pi_ros_env.sh"/>
     <machine name="comp_server" address="mycomp"/>
+
+    <arg name="record_all"         default="true"/>
+    <arg name="record_start_delay" default="2.0"/>
+    <arg name="rigid_body"         default="blimp"/>
+    <arg name="plotjuggler"        default="true"/>
+    <arg name="plotjuggler_delay"  default="5.0"/>
 
     <node
         machine="pi_client"
@@ -26,12 +31,34 @@
     >
         <param name="servoPin" value="17" />
     </node>
+
     <node
-        machine="pi_client"
+        machine="comp_server"
+        pkg="motor_control"
+        type="href.py"
+        name="reference_input"
+        output="screen"
+    />
+
+    <node
+        machine="comp_server"
         pkg="motor_control"
         type="controller_full.py"
         name="controller"
         output="screen"
     />
 
+    <!-- rosbag record all (radar, motor, OptiTrack) -->
+    <node machine="comp_server" pkg="rosbag" type="record" name="rosbag_record_all"
+        args="record -o /home/tim/ros/snnblimp_ws/rosbag/all /h_ref /h_meas /motor_control "
+        launch-prefix="bash -c 'sleep $(arg record_start_delay); $0 $@' "
+        if="$(arg record_all)"/>
+
+
+    <!-- plotjuggler: real-time plots -->
+    <node machine="comp_server" name="plotjuggler" pkg="plotjuggler" type="plotjuggler" 
+        args="--layout /home/tim/ros/snnblimp_ws/src/PlotJuggler/myLayout_playAll.xml"
+        launch-prefix="bash -c 'sleep $(arg plotjuggler_delay); $0 $@' "
+        if="$(arg plotjuggler)">
+    </node>
 </launch>

@@ -7,3 +7,4 @@ src/PlotJuggler/
 src/plotjuggler_msgs/
 src/plotjuggler-ros-plugins/
 src/mocap_optitrack/
+rosbag/
