@@ -143,17 +143,14 @@ void Motor::setSpeed(const motor_control::MotorCommand& msg)
     pwmWrite(_ccw_pwmPin, ccw_speed);
 }
 
-void Motor::mySigintHandler(int sig)
+void mySigintHandler(int sig)
 {
-    // bool cw_pwmPin_ok = ros::param::get("~cw_pwmPin", _cw_pwmPin);
-    // bool cw_dirPin_ok = ros::param::get("~cw_dirPin", _cw_dirPin);
-    // bool ccw_pwmPin_ok = ros::param::get("~ccw_pwmPin", _ccw_pwmPin);
-    // bool ccw_dirPin_ok = ros::param::get("~ccw_dirPin", _ccw_dirPin);
 
-    digitalWrite(_cw_dirPin, 0);
-    pwmWrite(_cw_pwmPin, 0);
-    digitalWrite(_ccw_dirPin, 0);
-    pwmWrite(_ccw_pwmPin, 0)
+
+    digitalWrite(26, 0);
+    pwmWrite(19, 0);
+    digitalWrite(21, 0);
+    pwmWrite(12, 0)
 
     ros::shutdown();
 }
@@ -163,7 +160,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "subscribe_to_speed",ros::init_options::NoSigintHandler);
     ros::NodeHandle nh;
-    signal(SIGINT, mySigintHandler);
+    signal(SIGINT, &Motor::mySigintHandler);
 
     Motor motor;
     ros::spin();

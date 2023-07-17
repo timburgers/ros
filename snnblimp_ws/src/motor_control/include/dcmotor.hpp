@@ -35,7 +35,6 @@ private:
 public:
     Motor();
     void setSpeed(const motor_control::MotorCommand& msg);
-
 };
 
 #endif
