@@ -39,6 +39,7 @@ class Servo:
             self.pwm.set_servo_pulsewidth(self._servoPin,correct_angle)
         #time.sleep(0.2)
 
+    #Return the rotors the the upward positions
     def return_pos_up(self):
         shut_down_msg = MotorCommand()
         shut_down_msg.angle = 1

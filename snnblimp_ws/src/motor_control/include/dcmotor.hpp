@@ -28,7 +28,7 @@ private:
     void correctSpeed(int &speed);
 
     // ROS Attributes
-    ros::NodeHandle nh;
+    // ros::NodeHandle nh;
     ros::Subscriber speed_sub;
     //std_msgs::Int32 speed_msg;
 
