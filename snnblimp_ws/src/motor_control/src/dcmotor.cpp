@@ -150,7 +150,7 @@ void mySigintHandler(int sig)
     digitalWrite(26, 0);
     pwmWrite(19, 0);
     digitalWrite(21, 0);
-    pwmWrite(12, 0)
+    pwmWrite(12, 0);
 
     ros::shutdown();
 }
