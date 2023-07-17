@@ -160,7 +160,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "subscribe_to_speed",ros::init_options::NoSigintHandler);
     ros::NodeHandle nh;
-    signal(SIGINT, &Motor::mySigintHandler);
+    signal(SIGINT, mySigintHandler);
 
     Motor motor;
     ros::spin();
