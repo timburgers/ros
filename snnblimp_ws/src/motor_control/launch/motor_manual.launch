@@ -29,6 +29,14 @@
     <node
         machine="comp_server"
         pkg="motor_control"
+        type="dcmotor_alive"
+        name="dcmotor_alive"
+        output="screen"
+    />
+
+    <node
+        machine="comp_server"
+        pkg="motor_control"
         type="keyboard_control_simple"
         name="publish_with_keyboard"
         output="screen"

@@ -1,6 +1,5 @@
 #include "dcmotor.hpp"
-#include <ros/ros.h>
-#include <signal.h>
+// #include <signal.h>
 
 using namespace std;
 
@@ -81,7 +80,31 @@ Motor::Motor()
     init_io();
 
     this->speed_sub = nh.subscribe("/motor_control",1000,&Motor::setSpeed,this);
+
+    dcmotor_alive_sub_ = nh_.subscribe("/dc_motor_alvive", 1, &Motor::dcmotorAliveCallback, this);
+    last_received_time_ = ros::Time::now();
+    check_timer_ = nh_.createTimer(ros::Duration(1.0), &Motor::checkForTimeout, this);
 }
+
+void Motor::dcmotorAliveCallback(const std_msgs::Bool::ConstPtr& msg)
+    {
+        // Update the last received time to the current time
+        last_received_time_ = ros::Time::now();
+    }
+
+
+void Motor::checkForTimeout(const ros::TimerEvent&)
+    {
+        // Calculate the time since the last message was received
+        ros::Duration time_since_last_msg = ros::Time::now() - last_received_time_;
+
+        // Check if the time since the last message is greater than 1 second
+        if (time_since_last_msg.toSec() > 1.0)
+        {
+            ROS_ERROR("No message received from dcmotor_alive for more than 1 second. Node will be terminated.");
+            ros::shutdown();
+        }
+    }
 
 /**
  * Set speed and direction at which the DC motor will rotate (user speed interval: [0-10])
@@ -143,24 +166,25 @@ void Motor::setSpeed(const motor_control::MotorCommand& msg)
     pwmWrite(_ccw_pwmPin, ccw_speed);
 }
 
-void mySigintHandler(int sig)
-{
+// void mySigintHandler(int sig)
+// {
 
 
-    digitalWrite(26, 0);
-    pwmWrite(19, 0);
-    digitalWrite(21, 0);
-    pwmWrite(12, 0);
+//     digitalWrite(26, 0);
+//     pwmWrite(19, 0);
+//     digitalWrite(21, 0);
+//     pwmWrite(12, 0);
 
-    ros::shutdown();
-}
+//     ros::shutdown();
+// }
 
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "subscribe_to_speed",ros::init_options::NoSigintHandler);
-    ros::NodeHandle nh;
-    signal(SIGINT, mySigintHandler);
+    ros::init(argc, argv, "subscribe_to_speed");
+    // ros::init(argc, argv, "subscribe_to_speed",ros::init_options::NoSigintHandler);
+    // ros::NodeHandle nh;
+    // signal(SIGINT, mySigintHandler);
 
     Motor motor;
     ros::spin();

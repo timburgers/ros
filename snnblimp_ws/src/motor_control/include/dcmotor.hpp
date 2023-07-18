@@ -10,6 +10,7 @@
 #include <ros/ros.h>
 #include <stdlib.h>
 #include <std_msgs/Int32.h>
+#include <std_msgs/Bool.h>
 #include "motor_control/MotorCommand.h"
 
 class Motor{
@@ -32,9 +33,16 @@ private:
     ros::Subscriber speed_sub;
     //std_msgs::Int32 speed_msg;
 
+    ros::Subscriber dcmotor_alive_sub_;
+    ros::Time last_received_time_;
+    ros::Timer check_timer_;
+
 public:
     Motor();
     void setSpeed(const motor_control::MotorCommand& msg);
+    void dcmotorAliveCallback(const std_msgs::Bool::ConstPtr& msg)
+    void Motor::checkForTimeout(const ros::TimerEvent&)
+
 };
 
 #endif
