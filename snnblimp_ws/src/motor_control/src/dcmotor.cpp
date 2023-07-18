@@ -6,7 +6,7 @@ using namespace std;
 // g++ -Wall -Wextra -Werror -o test dcmotors.cpp -lwiringPi
 
 /// Global variables
-int MAX_SPEED = 9;
+int MAX_SPEED = 10;
 int CLOCK = 2;
 int PWM_RANGE = 45; // 19.2 MHz / 2 / 100 = 20 kHz
 
@@ -33,13 +33,13 @@ void Motor::init_io()
  */
 void Motor::correctSpeed(int &speed){
 
-    if(speed < 0.9){
-        speed = 0;
-    }
-    else{
-        speed = 6.375 + 3.625 * speed;
-    }
-
+    // if(speed < 0.9){
+    //     speed = 0;
+    // }
+    // else{
+    //     speed = 6.375 + 3.625 * speed;
+    // }
+    speed = 1.5* speed
     /*
     switch (speed)
     {
