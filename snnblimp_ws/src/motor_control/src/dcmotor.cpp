@@ -159,7 +159,7 @@ void Motor::setSpeed(const motor_control::MotorCommand& msg)
     correctSpeed(cw_speed);
     correctSpeed(ccw_speed);
 
-    //ROS_INFO_STREAM("corrected speed = " << speed);
+    ROS_INFO_STREAM("corrected speed = " << speed);
     //ROS_INFO_STREAM("direction pin = " << _dirPin);
     //ROS_INFO_STREAM("pwm pin = " << _pwmPin);
 
