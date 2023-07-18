@@ -41,7 +41,7 @@ public:
     Motor();
     void setSpeed(const motor_control::MotorCommand& msg);
     void dcmotorAliveCallback(const std_msgs::Bool::ConstPtr& msg);
-    void Motor::checkForTimeout(const ros::TimerEvent&);
+    void checkForTimeout(const ros::TimerEvent&);
 
 };
 
