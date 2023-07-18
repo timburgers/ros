@@ -8,7 +8,7 @@ using namespace std;
 /// Global variables
 int MAX_SPEED = 10;
 int CLOCK = 2;
-int PWM_RANGE = 100; // 19.2 MHz / 2 / 100 = 20 kHz
+int PWM_RANGE = 200; // 19.2 MHz / 2 / 100 = 20 kHz
 
 /// GPIOs initialization
 void Motor::init_io()
