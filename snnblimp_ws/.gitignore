@@ -9,3 +9,4 @@ src/plotjuggler-ros-plugins/
 src/mocap_optitrack/
 rosbag/
 radar_position2go/
+src/motor_control/src/models/

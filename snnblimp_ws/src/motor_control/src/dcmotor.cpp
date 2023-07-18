@@ -6,7 +6,7 @@ using namespace std;
 // g++ -Wall -Wextra -Werror -o test dcmotors.cpp -lwiringPi
 
 /// Global variables
-int MAX_SPEED = 10;
+int MAX_SPEED = 9;
 int CLOCK = 2;
 int PWM_RANGE = 45; // 19.2 MHz / 2 / 100 = 20 kHz
 
