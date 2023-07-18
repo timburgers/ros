@@ -81,9 +81,9 @@ Motor::Motor()
 
     this->speed_sub = nh.subscribe("/motor_control",1000,&Motor::setSpeed,this);
 
-    dcmotor_alive_sub_ = nh_.subscribe("/dc_motor_alvive", 1, &Motor::dcmotorAliveCallback, this);
+    dcmotor_alive_sub_ = nh.subscribe("/dc_motor_alvive", 1, &Motor::dcmotorAliveCallback, this);
     last_received_time_ = ros::Time::now();
-    check_timer_ = nh_.createTimer(ros::Duration(1.0), &Motor::checkForTimeout, this);
+    check_timer_ = nh.createTimer(ros::Duration(1.0), &Motor::checkForTimeout, this);
 }
 
 void Motor::dcmotorAliveCallback(const std_msgs::Bool::ConstPtr& msg)

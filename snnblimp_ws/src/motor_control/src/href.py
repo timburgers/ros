@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     while not rospy.is_shutdown():
         msg=Float32()
-        msg.data=-h_ref_list[ind]
+        msg.data=h_ref_list[ind]
         pub_h_ref.publish(msg)
         rate.sleep()
         if ind >= len(h_ref_list)-1:
