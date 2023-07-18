@@ -101,7 +101,10 @@ void Motor::checkForTimeout(const ros::TimerEvent&)
         // Check if the time since the last message is greater than 1 second
         if (time_since_last_msg.toSec() > 0.3)
         {
-            ROS_ERROR("No message received from dcmotor_alive for more than 1 second. Node will be terminated.");
+            digitalWrite(_cw_dirPin, 0);
+            pwmWrite(_cw_pwmPin, 0);
+            digitalWrite(_ccw_dirPin, 0);
+            pwmWrite(_ccw_pwmPin, 0);
             ros::shutdown();
         }
     }
