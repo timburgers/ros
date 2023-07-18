@@ -39,7 +39,7 @@ void Motor::correctSpeed(int &speed){
     // else{
     //     speed = 6.375 + 3.625 * speed;
     // }
-    speed = 1.5* speed
+    speed = 1.5* speed;
     /*
     switch (speed)
     {
