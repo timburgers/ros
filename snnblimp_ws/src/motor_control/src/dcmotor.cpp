@@ -8,7 +8,7 @@ using namespace std;
 /// Global variables
 int MAX_SPEED = 10;
 int CLOCK = 2;
-int PWM_RANGE = 200; // 19.2 MHz / 2 / 100 = 20 kHz (https://cdn-shop.adafruit.com/datasheets/DRV2605.pdf)
+int PWM_RANGE = 64; // 19.2 MHz / 2 / 100 = 20 kHz (https://cdn-shop.adafruit.com/datasheets/DRV2605.pdf)
 
 /// GPIOs initialization
 void Motor::init_io()
@@ -39,7 +39,7 @@ void Motor::correctSpeed(int &speed){
     // else{
     //     speed = 6.375 + 3.625 * speed;
     // }
-    speed = 15*speed;
+    speed = 7*speed;
     /*
     switch (speed)
     {
