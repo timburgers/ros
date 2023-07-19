@@ -7,7 +7,7 @@ using namespace std;
 
 /// Global variables
 int MAX_SPEED = 10;
-int CLOCK = 2;
+int CLOCK = 4;
 int PWM_RANGE = 45; // 19.2 MHz / 2 / 100 = 20 kHz (https://cdn-shop.adafruit.com/datasheets/DRV2605.pdf)
 
 /// GPIOs initialization
