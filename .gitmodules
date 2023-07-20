@@ -4,3 +4,6 @@
 [submodule "snnblimp_ws/src/mocap_optitrack"]
 	path = snnblimp_ws/src/mocap_optitrack
 	url = https://github.com/h2r/mocap_optitrack
+[submodule "TFmini-ROS"]
+	path = TFmini-ROS
+	url = https://github.com/TFmini/TFmini-ROS.git

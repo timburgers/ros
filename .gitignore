@@ -2,3 +2,10 @@ build/
 devel/
 logs/
 .catkin_tools/
+.vscode/
+snnblimp_ws/src/PlotJuggler/
+snnblimp_ws/src/plotjuggler_msgs/
+snnblimp_ws/src/plotjuggler-ros-plugins/
+snnblimp_ws/src/mocap_optitrack/
+snnblimp_ws/rosbag/
+snnblimp_ws/src/motor_control/src/models/
