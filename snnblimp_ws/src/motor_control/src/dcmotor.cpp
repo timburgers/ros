@@ -26,10 +26,10 @@ void Motor::init_io()
 }
 
 /**
- * Apply speed correction: from speed [0-10] to speed [25-86]
+ * Apply speed correction: from speed [0-10] to speed [9-39] (due to the 45 pwm_range)
  *
  * @param[in] speed:  speed selected by user (between 0, min, and 10, max)
- * @param[out] speed: corrected speed (between 25 and 86) corresponding to the PWM duty cycle % to be send to the driver
+ * @param[out] speed: corrected speed (between 20 and 86) corresponding to the PWM duty cycle % to be send to the driver
  */
 void Motor::correctSpeed(int &speed){
 
@@ -44,7 +44,7 @@ void Motor::correctSpeed(int &speed){
         speed = 0;
     }
     else{
-        speed = 9 + 0.2*speed;
+        speed = 9 + 3*speed;
     }
     
     /*

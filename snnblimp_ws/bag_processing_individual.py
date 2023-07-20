@@ -9,8 +9,8 @@ import numpy as np
 rosbag_folder = "/home/tim/ros/snnblimp_ws/rosbag/"
 
 # Specify file to be analyzed
-date = '2023-07-17'
-time = '11-39-22'
+date = '2023-07-19'
+time = '16-34-58'
 files = rosbag_folder + "all_" + date + "-" + time + ".bag"
 
 time_offset = 0
@@ -85,7 +85,7 @@ if motor_control:
 if h_ref and optitrack and motor_control:
     # ---> Merge previous df's by closest TIME -> df_final
     # df_final = pd.merge_asof(df_ref, df_optitrack, on="time")
-    df_final = pd.merge_asof(df_ref, df_motor, on="time")
+    df_final = pd.merge_asof(df_motor,df_ref, on="time")
 
 # elif not radar_targets and optitrack and motor_control:
 #     first_sec = int(df_optitrack["time"].iloc[0])
