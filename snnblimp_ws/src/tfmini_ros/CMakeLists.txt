@@ -6,6 +6,7 @@ project(tfmini_ros)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  message_generation
 )
 find_package(Boost REQUIRED COMPONENTS system)
 
