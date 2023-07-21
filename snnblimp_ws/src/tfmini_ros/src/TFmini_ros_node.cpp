@@ -9,7 +9,7 @@ int main(int argc, char **argv)
   int baud_rate;
   benewake::TFmini *tfmini_obj;
 
-  nh.param("serial_port", portName, std::string("/dev/ttyUSB0"));
+  nh.param("serial_port", portName, std::string("/dev/ttyAMA0"));
   nh.param("baud_rate", baud_rate, 115200);
 
   tfmini_obj = new benewake::TFmini(portName, baud_rate);
