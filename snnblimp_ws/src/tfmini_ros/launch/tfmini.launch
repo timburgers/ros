@@ -4,7 +4,7 @@
     <machine name="comp_server" address="mycomp"/>
 
 
-    <node machine="pi_client" pkg="tfmini_ros" type="TFmini_ros_node" name="tfmini_ros_node" output="screen">
+    <node machine="pi_client" pkg="tfmini_ros" type="tfmini_ros_node" name="tfmini_ros_node" output="screen">
       <param name="serial_port" type="string" value="/dev/ttyAMA0" />
       <param name="baud_rate" type="int" value="115200" />
     </node>
