@@ -48,4 +48,5 @@
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>message_runtime</export> 
+  <exec_depend>message_runtime</exec_depend> 
 </package>
