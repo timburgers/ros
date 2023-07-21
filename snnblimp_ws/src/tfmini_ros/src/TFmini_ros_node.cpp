@@ -31,8 +31,8 @@ int main(int argc, char **argv)
     {
       TFmini_range.range = dist;
       TFmini_range.header.stamp = ros::Time::now();
-      std_msgs::Float32 dist_std
-      dist_std.data = dist
+      // std_msgs::Float32 dist_std
+      std_msgs::Float32 dist_std.data = dist
       pub_range.publish(dist_std);
     }
     else if(dist == -1.0)
