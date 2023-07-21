@@ -13,9 +13,9 @@ int main(int argc, char **argv)
   nh.param("baud_rate", baud_rate, 115200);
 
   tfmini_obj = new benewake::TFmini(portName, baud_rate);
-  ros::Publisher pub_range = nh.advertise<sensor_msgs::Range>(id, 1000, true);
-  sensor_msgs::Range TFmini_range;
-  TFmini_range.radiation_type = sensor_msgs::Range::INFRARED;
+  ros::Publisher pub_range = nh.advertise<TFmini::Range>(id, 1000, true);
+  TFmini::Range TFmini_range;
+  TFmini_range.radiation_type = TFmini::Range::INFRARED;
   TFmini_range.field_of_view = 0.04;
   TFmini_range.min_range = 0.3;
   TFmini_range.max_range = 12;
