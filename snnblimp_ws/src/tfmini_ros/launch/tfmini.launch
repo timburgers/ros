@@ -1,8 +1,13 @@
 <launch>
-  <node pkg="tfmini_ros" type="tfmini_ros_node" name="tfmini_ros_node">
-    <param name="serial_port" type="string" value="/dev/ttyAMA0" />
-    <param name="baud_rate" type="int" value="115200" />
-  </node>
+    <!-- define local server [e.g. computer] and remote client(s) [e.g. Pi0, Pi4,...] machines -->
+    <machine name="pi_client" timeout="20" address="mypi" user="pi" password="raspberry"  env-loader="/home/pi/ros/snnblimp_ws/pi_ros_env.sh"/>
+    <machine name="comp_server" address="mycomp"/>
+
+
+    <node machine="pi_client" pkg="tfmini_ros" type="TFmini_ros_node" name="tfmini_ros_node">
+      <param name="serial_port" type="string" value="/dev/ttyAMA0" />
+      <param name="baud_rate" type="int" value="115200" />
+    </node>
 
   <!-- <node pkg="tf" type="static_transform_publisher" name="broadcasterTFmini" args="0 0 0 0 0 0 base_link TFmini 100" /> --> -->
 </launch>
