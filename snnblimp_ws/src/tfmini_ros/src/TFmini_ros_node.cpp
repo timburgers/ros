@@ -34,6 +34,7 @@ int main(int argc, char **argv)
       std_msgs::Float32 dist_std;
       dist_std.data = dist;
       pub_range.publish(dist_std);
+      ros::Duration(0.01).sleep()
     }
     else if(dist == -1.0)
     {
