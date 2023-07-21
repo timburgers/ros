@@ -47,6 +47,7 @@ class Controller:
         self.pub_msg_snn = Float32()
 
         # Some important parameters
+        self.h_meas = 0.0
         self.h_ref = 0.0
         self.range = 0.0
         self.range_filter = 0.0
@@ -98,7 +99,7 @@ class Controller:
         self.h_ref = msg.data
 
     def callback_h_meas(self, msg):
-        pass
+        self.h_meas = msg.data
 
     def update_PID(self):
         u = self.pid.update_simple(self.error)
@@ -113,7 +114,8 @@ class Controller:
         return self.state_l2
 
     def update_command(self):
-        self.error = self.h_ref - 0
+        rospy.loginfo("h_meas = " + str(self.h_meas))
+        self.error = self.h_ref - self.h_meas
         
         # Create motor command from PID
         u = self.update_PID()
