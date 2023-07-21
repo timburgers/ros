@@ -7,6 +7,7 @@ project(tfmini_ros)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   message_generation
+  std_msgs
 )
 find_package(Boost REQUIRED COMPONENTS system)
 
