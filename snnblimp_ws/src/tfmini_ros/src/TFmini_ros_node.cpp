@@ -13,7 +13,7 @@ int main(int argc, char **argv)
   nh.param("baud_rate", baud_rate, 115200);
 
   tfmini_obj = new benewake::TFmini(portName, baud_rate);
-  ros::Publisher pub_range = nh.advertise<std_msgs::Float32>(id, 1, true);
+  ros::Publisher pub_range = nh.advertise<std_msgs::Float32>(id, 1, false);
   tfmini_ros::Range TFmini_range;
   TFmini_range.radiation_type = tfmini_ros::Range::INFRARED;
   TFmini_range.field_of_view = 0.04;
@@ -29,12 +29,11 @@ int main(int argc, char **argv)
     dist = tfmini_obj->getDist();
     if(dist > 0 && dist < TFmini_range.max_range)
     {
-      TFmini_range.range = dist;
-      TFmini_range.header.stamp = ros::Time::now();
+      // TFmini_range.range = dist;
+      // TFmini_range.header.stamp = ros::Time::now();
       std_msgs::Float32 dist_std;
       dist_std.data = dist;
       pub_range.publish(dist_std);
-      ros::Duration(0.01).sleep();
     }
     else if(dist == -1.0)
     {
