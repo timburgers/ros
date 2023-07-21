@@ -8,7 +8,8 @@
 #include <termios.h>
 #include <errno.h>
 #include <string>
-#include <sensor_msgs/Range.h>
+// #include <sensor_msgs/Range.h>
+#include "tfmini_ros/Range.h"
 
 namespace benewake
 {

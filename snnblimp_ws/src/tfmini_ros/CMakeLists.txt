@@ -5,7 +5,6 @@ project(tfmini_ros)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  sensor_msgs
   roscpp
 )
 find_package(Boost REQUIRED COMPONENTS system)
@@ -43,12 +42,11 @@ find_package(Boost REQUIRED COMPONENTS system)
 ##   * uncomment the generate_messages entry below
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
-## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+# Generate messages in the 'msg' folder
+add_message_files(
+  FILES
+  Range.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -64,11 +62,11 @@ find_package(Boost REQUIRED COMPONENTS system)
 #   Action2.action
 # )
 
-## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   std_msgs  # Or other packages containing msgs
-# )
+# Generate added messages and services with any dependencies listed here
+generate_messages(
+  DEPENDENCIES
+  std_msgs  # Or other packages containing msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -104,6 +102,7 @@ catkin_package(
 #  LIBRARIES TFmini_ros
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
+   DEPENDS message_runtime
 )
 
 ###########
