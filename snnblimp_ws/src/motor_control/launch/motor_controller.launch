@@ -3,10 +3,10 @@
     <machine name="pi_client" timeout="20" address="mypi" user="pi" password="raspberry"  env-loader="/home/pi/ros/snnblimp_ws/pi_ros_env.sh"/>
     <machine name="comp_server" address="mycomp"/>
 
-    <arg name="record_all"         default="true"/>
+    <arg name="record_all"         default="false"/>
     <arg name="record_start_delay" default="1.0"/>
     <arg name="rigid_body"         default="true"/>
-    <arg name="plotjuggler"        default="true"/>
+    <arg name="plotjuggler"        default="false"/>
     <arg name="plotjuggler_delay"  default="5.0"/>
 
 
@@ -50,6 +50,19 @@
         output="screen"
     />
 
+    <!-- <node pkg="mocap_optitrack" 
+        type="pose_stamper_1" 
+        name="pose_stamper_1" />
+    
+    <node pkg="mocap_optitrack" 
+        type="mocap_node" 
+        name="mocap_node"
+        respawn="false"
+        launch-prefix=""
+        required="true">
+
+        <rosparam file="$(find mocap_optitrack)/config/mocap.yaml" command="load" />
+    </node> -->
 
     <node
         machine="comp_server"
@@ -64,6 +77,7 @@
       <param name="baud_rate" type="int" value="115200" />
     </node>
 
+    
 
     <!-- rosbag record all (radar, motor, OptiTrack) -->
     <node machine="comp_server" pkg="rosbag" type="record" name="rosbag_record_all"

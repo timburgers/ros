@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     {
       TFmini_range.range = dist;
       TFmini_range.header.stamp = ros::Time::now();
-      pub_range.publish(TFmini_range);
+      pub_range.publish(TFmini_range.range);
     }
     else if(dist == -1.0)
     {

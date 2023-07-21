@@ -35,7 +35,7 @@ class Controller:
 
         # Subscribers and Publisher
         # self.sub_radar = rospy.Subscriber("/h_meas", MyEventArray, self.callback_radar)
-        self.sub_h_meas = rospy.Subscriber("/h_meas", Float32, self.callback_h_meas)
+        self.sub_h_meas = rospy.Subscriber("/tfmini_ros_node/TFmini", Float32, self.callback_h_meas)
         self.sub_h_ref = rospy.Subscriber("/h_ref", Float32, self.callback_h_ref)
         self.pub_motor = rospy.Publisher("/motor_control", MotorCommand, queue_size = 1)        #send to the motor_controller
         self.pub_pid   = rospy.Publisher("/u_pid", Float32, queue_size = 1)
