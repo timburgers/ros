@@ -41,8 +41,12 @@
   <!-- Use test_depend for packages you need only for testing: -->
   <!--   <test_depend>gtest</test_depend> -->
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>sensor_msgs</build_depend>
+  <!-- <build_depend>sensor_msgs</build_depend> -->
   <build_depend>roscpp</build_depend>
+  <build_depend>message_generation</build_depend>
+  <export>message_runtime</export> 
+  <exec_depend>message_runtime</exec_depend> 
+
   <run_depend>boost</run_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
