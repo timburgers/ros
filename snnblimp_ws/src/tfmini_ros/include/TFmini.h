@@ -10,6 +10,7 @@
 #include <string>
 // #include <sensor_msgs/Range.h>
 #include "tfmini_ros/Range.h"
+#include <std_msgs/Float32.h>
 
 namespace benewake
 {
