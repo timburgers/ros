@@ -25,7 +25,7 @@
         type="dcmotor"
         name="subscribe_to_speed"
         output="screen"
-        launch-prefix="sudo -E"
+        launch-prefix="echo raspberry | sudo -S -E"
     >
         <param name="cw_pwmPin" value="19" />
         <param name="cw_dirPin" value="26" />
@@ -65,7 +65,7 @@
     </node> -->
 
     <node
-        machine="comp_server"
+        machine="pi_client"
         pkg="motor_control"
         type="controller_full.py"
         name="controller"

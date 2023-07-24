@@ -1,7 +1,7 @@
 <launch>
 
     <!-- define local server [e.g. computer] and remote client(s) [e.g. Pi0, Pi4,...] machines -->
-    <machine name="pi_client" timeout="20" address="mypi" user="pi" password="raspberry"  env-loader="/home/pi/ros/snnblimp_ws/pi_ros_env.sh"/>
+    <machine name="pi_client" timeout="20" address="mypi2" user="pi" password="raspberry"  env-loader="/home/pi/ros/snnblimp_ws/pi_ros_env.sh"/>
     <machine name="comp_server" address="mycomp"/>
 
     <node
