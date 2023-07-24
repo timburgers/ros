@@ -46,6 +46,7 @@ find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs message_generation
 add_message_files(
   FILES
   MotorCommand.msg
+  OptitrackPose.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -129,9 +130,9 @@ ${catkin_INCLUDE_DIRS}
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(dcmotor src/dcmotor.cpp)                                                              #COMMENTED OUT ON MYCOMP BUILDING
+# add_executable(dcmotor src/dcmotor.cpp)                                                              #COMMENTED OUT ON MYCOMP BUILDING
 # add_executable(keyboard_control src/keyboard_control.cpp)
-# add_executable(keyboard_control_simple src/keyboard_control_simple.cpp)
+add_executable(keyboard_control_simple src/keyboard_control_simple.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -141,21 +142,21 @@ add_executable(dcmotor src/dcmotor.cpp)                                         
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-add_dependencies(dcmotor ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})              #COMMENTED OUT ON MYCOMP BUILDING
+# add_dependencies(dcmotor ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})              #COMMENTED OUT ON MYCOMP BUILDING
 # add_dependencies(keyboard_control ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-# add_dependencies(keyboard_control_simple ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(keyboard_control_simple ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(dcmotor                                                                         #COMMENTED OUT ON MYCOMP BUILDING
-  ${catkin_LIBRARIES}
-  -lwiringPi
-)
+# target_link_libraries(dcmotor                                                                         #COMMENTED OUT ON MYCOMP BUILDING
+#   ${catkin_LIBRARIES}
+#   -lwiringPi
+# )
 # target_link_libraries(keyboard_control
 #   ${catkin_LIBRARIES}
 # )
-# target_link_libraries(keyboard_control_simple
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(keyboard_control_simple
+  ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##

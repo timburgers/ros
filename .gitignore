@@ -9,3 +9,5 @@ snnblimp_ws/src/plotjuggler-ros-plugins/
 snnblimp_ws/src/mocap_optitrack/
 snnblimp_ws/rosbag/
 snnblimp_ws/src/motor_control/src/models/
+snnblimp_ws/src/motor_control/CMakeLists.txt
+

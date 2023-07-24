@@ -20,7 +20,7 @@ from pygad.torchga import model_weights_as_dict
 
 # Subscriber messages
 # from radar_targets_msgs.msg import MyEventArray
-from radar_targets_msgs.msg import MyEvent
+# from radar_targets_msgs.msg import MyEvent
 from std_msgs.msg import Float32
 # Publishing messages
 from motor_control.msg import MotorCommand
@@ -35,7 +35,7 @@ class Controller:
 
         # Subscribers and Publisher
         # self.sub_radar = rospy.Subscriber("/h_meas", MyEventArray, self.callback_radar)
-        self.sub_h_meas = rospy.Subscriber("/tfmini_ros_node/TFmini", Float32, self.callback_h_meas)
+        self.sub_h_meas = rospy.Subscriber("/tfmini_ros_node/TFmini", Float32, self.callback_h_meas, tcp_nodelay=True)
         self.sub_h_ref = rospy.Subscriber("/h_ref", Float32, self.callback_h_ref)
         self.pub_motor = rospy.Publisher("/motor_control", MotorCommand, queue_size = 1)        #send to the motor_controller
         self.pub_pid   = rospy.Publisher("/u_pid", Float32, queue_size = 1)
