@@ -5,7 +5,7 @@ from random import uniform
 import numpy as np
 import time
 
-MODE = "random"       # either "list" or "random"
+MODE = "list"       # either "list" or "random"
 
 def get_sec(time_str):
     h, m, s = time_str.split(':')
@@ -20,14 +20,14 @@ if __name__ == '__main__':
     if MODE == "list":
         # Parameters
         frequency = 0.2                     # [Hz]
-        h_ref_list = [0.5,-1,-1.5,2,2.5,3]    
+        h_ref_list = [0.8]    
 
         ### running Node
         ind = 0
         rate = rospy.Rate(frequency)
         while not rospy.is_shutdown():
             msg=Float32()
-            msg.data=-h_ref_list[ind]
+            msg.data=h_ref_list[ind]
             pub_h_ref.publish(msg)
             rate.sleep()
             if ind >= len(h_ref_list)-1:

@@ -131,10 +131,10 @@ class Controller:
         self.pub_msg.ts = rospy.get_rostime()
 
         if u >= 0:
-            self.pub_msg.angle = 1
+            self.pub_msg.angle = 10
         else:
             u = u*(-1)
-            self.pub_msg.angle = 10
+            self.pub_msg.angle = 1
 
         self.pub_msg.cw_speed = u
         self.pub_msg.ccw_speed = u
