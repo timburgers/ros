@@ -10,7 +10,7 @@ int main(int argc, char **argv)
   benewake::TFmini *tfmini_obj;
 
   nh.param("serial_port", portName, std::string("/dev/ttyAMA0"));
-  nh.param("baud_rate", baud_rate, 4800);
+  nh.param("baud_rate", baud_rate, 115200);
 
   tfmini_obj = new benewake::TFmini(portName, baud_rate);
   ros::Publisher pub_range = nh.advertise<std_msgs::Float32>(id, 1, false);
