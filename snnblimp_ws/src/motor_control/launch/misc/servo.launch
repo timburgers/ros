@@ -2,7 +2,7 @@
   
 <launch>
     <node
-        machine="pi_client"
+
         pkg="motor_control"
         type="servo_ros.py"
         name="subscribe_to_angle"
