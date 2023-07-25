@@ -106,7 +106,7 @@ void Motor::checkForTimeout(const ros::TimerEvent&)
         ros::Duration time_since_last_msg = ros::Time::now() - last_received_time_;
 
         // Check if the time since the last message is greater than 1 second
-        if (time_since_last_msg.toSec() > 1.0)
+        if (time_since_last_msg.toSec() > 2.0)
         {
             digitalWrite(_cw_dirPin, 0);
             pwmWrite(_cw_pwmPin, 0);
