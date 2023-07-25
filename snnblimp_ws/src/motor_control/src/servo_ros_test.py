@@ -6,7 +6,7 @@ from motor_control.msg import MotorCommand
 from gpiozero import Servo
 
 
-class Servo:
+class servo_turn:
     """
     Servo class definition, which subscribes to the topic /servo_angle to get angle commands for the servomotor
     """
@@ -38,7 +38,7 @@ class Servo:
 
 if __name__ == '__main__':
     rospy.init_node('subscribe_to_angle') # Node initialization #, anonymous=True)
-    myServo = Servo()                     # Instantiation of the Servo class
+    myServo = servo_turn()                     # Instantiation of the Servo class
     rospy.spin()
     rospy.on_shutdown(myServo.return_pos_up)
 
