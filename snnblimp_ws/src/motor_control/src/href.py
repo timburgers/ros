@@ -41,7 +41,7 @@ if __name__ == '__main__':
         frequency_bounds    = [30, 40]      # [s]
         minimal_step_size   = 0.5           # [m]
         init_h_ref          = 1.1
-        init_freq           = 0.5
+        init_freq           = 0.04
 
         ### running Node
         freq = init_freq
