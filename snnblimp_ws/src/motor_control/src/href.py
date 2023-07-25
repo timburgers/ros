@@ -15,7 +15,7 @@ if __name__ == '__main__':
     rospy.init_node("generate_h_ref")
     rospy.loginfo("Generate h ref node has been started")
 
-    pub_h_ref = rospy.Publisher("/h_ref",Float32, queue_size=10)
+    pub_h_ref = rospy.Publisher("/h_ref",Float32, queue_size=1)
 
     if MODE == "list":
         # Parameters
