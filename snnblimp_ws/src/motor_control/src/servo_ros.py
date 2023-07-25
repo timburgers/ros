@@ -29,6 +29,8 @@ class Servo:
         Function that converts the angle command to the appropriate duty cycle to
         handle the movement of the servo
         """
+
+        rospy.loginfo(msg.angle)
         if msg.angle > 10:
             #rospy.loginfo("closing servo")
             self.pwm.set_PWM_dutycycle(self._servoPin,0)
