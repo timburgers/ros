@@ -5,7 +5,7 @@ import rospy
 from motor_control.msg import MotorCommand
 
 # Global variables:
-SERVO_FREQUENCY = 30.0
+SERVO_FREQUENCY = 50
 
 class Servo:
     """
