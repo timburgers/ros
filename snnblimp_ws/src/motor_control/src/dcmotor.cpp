@@ -86,7 +86,7 @@ Motor::Motor()
     _max_speed = MAX_SPEED;
     init_io();
 
-    this->speed_sub = nh.subscribe("/motor_control",1000,&Motor::setSpeed,this);
+    this->speed_sub = nh.subscribe("/motor_control",1,&Motor::setSpeed,this);
 
     dcmotor_alive_sub_ = nh.subscribe("/dc_motor_alvive", 1, &Motor::dcmotorAliveCallback, this);
     last_received_time_ = ros::Time::now();
