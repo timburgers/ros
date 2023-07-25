@@ -6,10 +6,6 @@ from motor_control.msg import MotorCommand
 from gpiozero import Servo
 
 
-
-servo.max()
-
-
 class Servo:
     """
     Servo class definition, which subscribes to the topic /servo_angle to get angle commands for the servomotor
