@@ -11,12 +11,12 @@
 
 
     <node
-        machine="comp_server"
+        machine="pi_client"
         pkg="motor_control"
         type="dcmotor_alive.py"
         name="dcmotor_alive"
         output="screen"
-        launch-prefix="xterm -e"
+
     />
 
     <node
