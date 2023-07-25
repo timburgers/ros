@@ -10,7 +10,7 @@ rosbag_folder = "/home/tim/ros/snnblimp_ws/rosbag/"
 
 # Specify file to be analyzed
 date = '2023-07-25'
-time = '12-41-37'
+time = '12-49-38'
 files = rosbag_folder + "all_" + date + "-" + time + ".bag"
 
 time_offset = 0

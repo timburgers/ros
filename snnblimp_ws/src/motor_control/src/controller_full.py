@@ -57,7 +57,7 @@ class Controller:
         self.pid = PID.PID(6, 0.3, 0.3, 1/FREQUENCY, True) # self.pid = PID.PID(P, I, D, dt, simple)
         
         # SNN
-        self.init_SNN_model()
+        # self.init_SNN_model()
 
 
     def init_SNN_model(self):

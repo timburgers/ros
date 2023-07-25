@@ -5,7 +5,7 @@ from random import uniform
 import numpy as np
 import time
 
-MODE = "list"       # either "list" or "random"
+MODE = "random"       # either "list" or "random"
 
 def get_sec(time_str):
     h, m, s = time_str.split(':')
@@ -36,9 +36,9 @@ if __name__ == '__main__':
     
     if MODE == "random":
         # Parameters
-        sim_time = "00:04:00"
-        height_bounds       = [0.5,   3]    # [m]
-        frequency_bounds    = [0.1, 0.2]    # [Hz]
+        sim_time = "00:05:00"
+        height_bounds       = [0.5,   2.5]    # [m]
+        frequency_bounds    = [30, 40]      # [s]
         minimal_step_size   = 0.5           # [m]
         init_h_ref          = 1.1
         init_freq           = 0.5
@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
             # Get new h_ref and freq
             h_ref_prev = h_ref
-            freq = round(uniform(frequency_bounds[0],frequency_bounds[1]),3)
+            freq = round(uniform(1/frequency_bounds[0],1/frequency_bounds[1]),3)
             h_ref = round(uniform(height_bounds[0], height_bounds[1]),1)
 
             i=0
