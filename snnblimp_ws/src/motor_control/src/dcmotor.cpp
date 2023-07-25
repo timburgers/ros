@@ -31,7 +31,7 @@ void Motor::init_io()
  * @param[in] speed:  speed selected by user (between 0, min, and 10, max)
  * @param[out] speed: corrected speed (between 20 and 86) corresponding to the PWM duty cycle % to be send to the driver
  */
-void Motor::correctSpeed(int &speed){
+void Motor::correctSpeed(float &speed){
 
     // if(speed < 0.9){
     //     speed = 0;
@@ -44,7 +44,7 @@ void Motor::correctSpeed(int &speed){
         speed = 0;
     }
     else{
-        speed = 9 + 1*speed;
+        speed = 9 + 3*speed;
     }
     
     /*
@@ -127,9 +127,9 @@ void Motor::setSpeed(const motor_control::MotorCommand& msg)
     //ROS_INFO_STREAM("speed_msg = " << speed_msg.data);
 
         int cw_dir_value;
-        int cw_speed = msg.cw_speed;
+        float cw_speed = msg.cw_speed;
         int ccw_dir_value;
-        int ccw_speed = msg.ccw_speed;
+        float ccw_speed = msg.ccw_speed;
 
     if (msg.cw_speed < 0)
     {

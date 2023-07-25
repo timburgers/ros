@@ -18,15 +18,15 @@ class Motor{
 private:
 
     // Attributes
-    int _cw_pwmPin;
+    float _cw_pwmPin;
     int _cw_dirPin;
-    int _ccw_pwmPin;
+    float _ccw_pwmPin;
     int _ccw_dirPin;
     int _max_speed;
-    int _speed;
+    float _speed;
 
     void init_io();
-    void correctSpeed(int &speed);
+    void correctSpeed(float &speed);
 
     // ROS Attributes
     ros::NodeHandle nh;
