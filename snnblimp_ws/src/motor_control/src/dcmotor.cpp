@@ -44,7 +44,7 @@ void Motor::correctSpeed(int &speed){
         speed = 0;
     }
     else{
-        speed = 12 + 3*speed;
+        speed = 9 + 0.3*speed;
     }
     
     /*
