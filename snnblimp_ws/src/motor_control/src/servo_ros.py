@@ -30,7 +30,7 @@ class Servo:
         handle the movement of the servo
         """
 
-        # rospy.loginfo(msg.angle)
+        rospy.loginfo(msg.angle)
         if msg.angle > 10:
             #rospy.loginfo("closing servo")
             self.pwm.set_PWM_dutycycle(self._servoPin,0)
