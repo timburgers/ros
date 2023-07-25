@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import pigpio
 import time
 import rospy
@@ -57,18 +57,3 @@ if __name__ == '__main__':
     rospy.on_shutdown(myServo.return_pos_up)
 
 
-
-# Garbage (that might be useful later):
-'''
-try:
-    servo = Servo(17)
-    while True:
-        servo.update_angle(90)
-        servo.update_angle(180)
-        servo.update_angle(45)
-        servo.update_angle(0)
-    
-except KeyboardInterrupt:
-    servo.pwm.stop()
-    GPIO.cleanup()
-'''
