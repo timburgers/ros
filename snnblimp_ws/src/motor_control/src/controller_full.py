@@ -133,7 +133,7 @@ class Controller:
         if u >= 0:
             self.pub_msg.angle = 10
         else:
-            # u = u*(-1)
+            u = u*(-1)
             self.pub_msg.angle = 1
 
         self.pub_msg.cw_speed = u
