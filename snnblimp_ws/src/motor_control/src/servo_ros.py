@@ -40,7 +40,7 @@ class Servo:
             
             # if msg.angle > 5:
             #     correct_angle = 300
-            correct_angle = 2510-210*msg.angle
+            correct_angle = 2700-200*msg.angle
             self.pwm.set_servo_pulsewidth(self._servoPin,correct_angle)
         #time.sleep(0.2)
 
