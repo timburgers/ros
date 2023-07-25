@@ -36,7 +36,7 @@ class Servo:
         else:
             # #correct_angle = 2500-11.1111*msg.angle
             if msg.angle==1:
-                correct_angle = 2500
+                correct_angle = 2300
             
             if msg.angle==10:
                 correct_angle = 500
