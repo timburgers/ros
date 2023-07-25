@@ -26,7 +26,7 @@ from std_msgs.msg import Float32
 from motor_control.msg import MotorCommand
 
 # Global variables:
-FREQUENCY = 5.0
+FREQUENCY = 30.0
 FILENAME = "345-morning-tree"
 
 class Controller:

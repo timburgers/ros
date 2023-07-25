@@ -9,8 +9,8 @@ import numpy as np
 rosbag_folder = "/home/tim/ros/snnblimp_ws/rosbag/"
 
 # Specify file to be analyzed
-date = '2023-07-19'
-time = '16-34-58'
+date = '2023-07-25'
+time = '12-41-37'
 files = rosbag_folder + "all_" + date + "-" + time + ".bag"
 
 time_offset = 0

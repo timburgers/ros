@@ -3,7 +3,7 @@
     <machine name="pi_client" timeout="20" address="192.168.12.35" user="pi" password="raspberry"  env-loader="/home/pi/ros/snnblimp_ws/pi_ros_env.sh"/>
     <machine name="comp_server" address="192.168.12.1"/>
 
-    <arg name="record_all"         default="false"/>
+    <arg name="record_all"         default="true"/>
     <arg name="record_start_delay" default="1.0"/>
     <arg name="rigid_body"         default="true"/>
     <arg name="plotjuggler"        default="false"/>
@@ -81,7 +81,7 @@
 
     <!-- rosbag record all (radar, motor, OptiTrack) -->
     <node machine="comp_server" pkg="rosbag" type="record" name="rosbag_record_all"
-        args="record -o /home/tim/ros/snnblimp_ws/rosbag/all /h_ref /h_meas /motor_control "
+        args="record -o /home/tim/ros/snnblimp_ws/rosbag/all /h_ref /h_meas /motor_control /optitrack"
         launch-prefix="bash -c 'sleep $(arg record_start_delay); $0 $@' "
         if="$(arg record_all)"/>
 

@@ -7,7 +7,7 @@ from natnet_client import NatNetClient
 class OptitrackPublisher(object):
     def __init__(self):
         rospy.init_node("optitrack_publisher")
-        self.publisher = rospy.Publisher("optitrack", OptitrackPose, queue_size=10)
+        self.publisher = rospy.Publisher("/optitrack", OptitrackPose, queue_size=10)
         # TODO: remove hardcoded id, use ros parameter or args or whatever
         self.ot_id = 1
         # start client in separate thread
