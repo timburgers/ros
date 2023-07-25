@@ -41,6 +41,22 @@ if h_ref:
                  'h_ref': ref},
                 ignore_index=True)
 
+
+if h_ref:
+    column_names = ['time','h_meas']
+    df_ref = pd.DataFrame(columns=column_names)
+    
+    for topic, msg, t in bag.read_messages(topics='/h_ref'):
+        ref = msg.data
+        ts = t.to_sec()
+        
+        if ts > time_offset:
+    
+            df_ref = df_ref.append(
+                {'time': ts,
+                 'h_ref': ref},
+                ignore_index=True)
+            
 # ---> Build OPTITRACK dataframe: df_optitrack
 if optitrack:
 
@@ -81,6 +97,7 @@ if motor_control:
                 ignore_index=True
             )
     
+
 
 if h_ref and optitrack and motor_control:
     # ---> Merge previous df's by closest TIME -> df_final

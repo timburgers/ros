@@ -37,10 +37,10 @@ if __name__ == '__main__':
     if MODE == "random":
         # Parameters
         sim_time = "00:05:00"
-        height_bounds       = [0.5,   2.5]    # [m]
+        height_bounds       = [0.5,   1]    # [m]
         frequency_bounds    = [30, 40]      # [s]
-        minimal_step_size   = 0.5           # [m]
-        init_h_ref          = 1.1
+        minimal_step_size   = 0.1           # [m]
+        init_h_ref          = 0.8
         init_freq           = 0.04
 
         ### running Node
