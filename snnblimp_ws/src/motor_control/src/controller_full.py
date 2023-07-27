@@ -32,14 +32,13 @@ FILENAME = "345-morning-tree"
 class Controller:
     
     def __init__(self):
-
         # Subscribers and Publisher
         # self.sub_radar = rospy.Subscriber("/h_meas", MyEventArray, self.callback_radar)
         self.sub_h_meas = rospy.Subscriber("/tfmini_ros_node/TFmini", Float32, self.callback_h_meas, tcp_nodelay=True)
-        self.sub_h_ref = rospy.Subscriber("/h_ref", Float32, self.callback_h_ref)
-        self.pub_motor = rospy.Publisher("/motor_control", MotorCommand, queue_size = 1)        #send to the motor_controller
-        self.pub_pid   = rospy.Publisher("/u_pid", Float32, queue_size = 1)
-        self.pub_snn   = rospy.Publisher("/u_snn", Float32, queue_size = 1)
+        self.sub_h_ref = rospy.Subscriber("/h_ref", Float32, self.callback_h_ref, tcp_nodelay=True)
+        self.pub_motor = rospy.Publisher("/motor_control", MotorCommand, queue_size = 1,tcp_nodelay=True)        #send to the motor_controller
+        self.pub_pid   = rospy.Publisher("/u_pid", Float32, queue_size = 1,tcp_nodelay=True)
+        self.pub_snn   = rospy.Publisher("/u_snn", Float32, queue_size = 1, tcp_nodelay=True)
 
         # Messages
         self.pub_msg = MotorCommand()
