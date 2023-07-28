@@ -6,17 +6,18 @@ import pandas as pd
 from os import listdir
 import numpy as np
 
-rosbag_folder = "/home/tim/ros/snnblimp_ws/rosbag/"
+rosbag_folder = "/home/tim/ros/snnblimp_ws/rosbag/best/"
 
 # Specify file to be analyzed
 date = '2023-07-28'
-time = '12-32-00'
+time = '14-06-15'
 files = rosbag_folder + "all_" + date + "-" + time + ".bag"
 
 time_offset = 0
 number_samples = 30
 
 h_ref         = True
+h_meas        = True
 optitrack     = True
 motor_control = True
 
@@ -26,19 +27,19 @@ print(bagfile)
 bag = rosbag.Bag(bagfile)
 
 # ---> Build RADAR dataframe: df_targets
-if h_ref:
-    column_names = ['time','h_ref']
-    df_ref = pd.DataFrame(columns=column_names)
+if h_meas:
+    column_names = ['time','h_meas']
+    df_meas = pd.DataFrame(columns=column_names)
     
-    for topic, msg, t in bag.read_messages(topics='/optitrack'):
-        ref = msg.data
+    for topic, msg, t in bag.read_messages(topics='/tfmini_ros_node/TFmini'):
+        meas = msg.data
         ts = t.to_sec()
         
         if ts > time_offset:
     
-            df_ref = df_ref.append(
+            df_meas = df_meas.append(
                 {'time': ts,
-                 'h_ref': ref},
+                 'h_meas': meas},
                 ignore_index=True)
 
 
@@ -58,22 +59,22 @@ if h_ref:
                 ignore_index=True)
             
 # ---> Build OPTITRACK dataframe: df_optitrack
-if optitrack:
+# if optitrack:
 
-    column_names = ['time','h_meas']
-    df_optitrack = pd.DataFrame(columns=column_names)
+#     column_names = ['time','h_meas']
+#     df_optitrack = pd.DataFrame(columns=column_names)
     
-    for topic, msg, t in bag.read_messages(topics='/blimp/pose'):
-        height = msg.position.z
-        ts = t.to_sec()
+#     for topic, msg, t in bag.read_messages(topics='/optitrack'):
+#         height = msg.position.z
+#         ts = t.to_sec()
         
-        if ts > time_offset:
+#         if ts > time_offset:
     
-            df_optitrack = df_optitrack.append(
-                {'time': ts,
-                 'h_meas': height},
-                ignore_index=True
-            )
+#             df_optitrack = df_optitrack.append(
+#                 {'time': ts,
+#                  'h_meas': height},
+#                 ignore_index=True
+#             )
         
     
 if motor_control:
