@@ -37,6 +37,7 @@ if __name__ == '__main__':
         ### running Node
         ind = 0
         rospy.wait_for_message("/motor_control", MotorCommand, timeout=None)
+        time.sleep(1)
         rate = rospy.Rate(frequency)
 
         while not rospy.is_shutdown():
