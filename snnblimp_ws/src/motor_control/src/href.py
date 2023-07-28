@@ -5,6 +5,7 @@ from random import uniform
 import numpy as np
 import time
 from motor_control.msg import MotorCommand
+import roslaunch
 
 
 MODE = "list"       # either "list" or "random"
@@ -44,9 +45,13 @@ if __name__ == '__main__':
             pub_h_ref.publish(msg)
             rate.sleep()
             if ind >= len(h_ref_list)-1:
-                rospy.signal_shutdown("time over")
+                uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
+                launch = roslaunch.parent.ROSLaunchParent(uuid, ["/home/tim/ros/snnblimp_ws/src/motor_control/launch/motor_controller.launch"])
+                launch.shutdown()
             else: ind +=1
     
+
+
     if MODE == "random":
         # Parameters
         sim_time = "00:05:00"
