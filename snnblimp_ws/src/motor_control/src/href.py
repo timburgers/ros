@@ -33,7 +33,7 @@ if __name__ == '__main__':
             pub_h_ref.publish(msg)
             rate.sleep()
             if ind >= len(h_ref_list)-1:
-                rospy.signal_shutdown()
+                rospy.signal_shutdown("time over")
             else: ind +=1
     
     if MODE == "random":
