@@ -29,6 +29,16 @@ from motor_control.msg import MotorCommand
 FREQUENCY = 30.0
 FILENAME = "345-morning-tree"
 
+class PID_seperate:
+    def __init__(self, p,i,d):
+        self.p = Float32(p)
+        self.i = Float32(i)
+        self.d = Float32(d)
+
+    def __repr__(self):
+        return f"ThreeFloats({self.p}, {self.i}, {self.d})"
+
+
 class Controller:
     
     def __init__(self):
@@ -37,7 +47,7 @@ class Controller:
         self.sub_h_meas = rospy.Subscriber("/tfmini_ros_node/TFmini", Float32, self.callback_h_meas, tcp_nodelay=True)
         self.sub_h_ref = rospy.Subscriber("/h_ref", Float32, self.callback_h_ref, tcp_nodelay=True)
         self.pub_motor = rospy.Publisher("/motor_control", MotorCommand, queue_size = 1,tcp_nodelay=True)        #send to the motor_controller
-        self.pub_pid   = rospy.Publisher("/u_pid", Float32, queue_size = 1,tcp_nodelay=True)
+        self.pub_pid   = rospy.Publisher("/u_pid", PID_seperate, queue_size = 1,tcp_nodelay=True)
         self.pub_snn   = rospy.Publisher("/u_snn", Float32, queue_size = 1, tcp_nodelay=True)
 
         # Messages
@@ -101,8 +111,8 @@ class Controller:
         self.h_meas = msg.data
 
     def update_PID(self):
-        u = self.pid.update_simple(self.error)
-        return u
+        pe,ie,de = self.pid.update_simple(self.error)
+        return pe,ie,de 
 
     def update_SNN(self):
         error = torch.Tensor([self.error])
@@ -117,9 +127,12 @@ class Controller:
         self.error = self.h_ref - self.h_meas
         
         # Create motor command from PID
-        u = self.update_PID()
-        self.pub_msg_pid = u
+        pe,ie,de  = self.update_PID()
+        self.pub_msg_pid = PID_seperate(pe,ie,de)
+        u = pe + ie + de
+        # for more insight in pid
         self.pub_pid.publish(self.pub_msg_pid)
+
 
         # Create motor command from SNN
         # u = self.update_SNN()

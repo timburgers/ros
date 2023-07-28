@@ -75,7 +75,7 @@
 
     <!-- rosbag record all (radar, motor, OptiTrack) -->
     <node machine="comp_server" pkg="rosbag" type="record" name="rosbag_record_all"
-        args="record -o /home/tim/ros/snnblimp_ws/rosbag/all /h_ref /tfmini_ros_node/TFmini /motor_control /optitrack"
+        args="record -o /home/tim/ros/snnblimp_ws/rosbag/all /h_ref /tfmini_ros_node/TFmini /u_pid /motor_control /optitrack"
         launch-prefix="bash -c 'sleep $(arg record_start_delay); $0 $@' "
         if="$(arg record_all)"/>
 

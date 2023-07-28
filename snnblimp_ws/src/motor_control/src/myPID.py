@@ -62,9 +62,9 @@ class PID:
         
         self.previous_error = error
         
-        u = self.Kp * error + self.Ki * self.integral + self.Kd * self.derivative
+        # u = self.Kp * error + self.Ki * self.integral + self.Kd * self.derivative
         
-        return u
+        return self.Kp * error, self.Ki * self.integral, self.Kd * self.derivative
     
     
     
