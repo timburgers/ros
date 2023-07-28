@@ -5,7 +5,7 @@ from random import uniform
 import numpy as np
 import time
 
-MODE = "random"       # either "list" or "random"
+MODE = "list"       # either "list" or "random"
 
 def get_sec(time_str):
     h, m, s = time_str.split(':')
