@@ -9,8 +9,8 @@ import numpy as np
 rosbag_folder = "/home/tim/ros/snnblimp_ws/rosbag/"
 
 # Specify file to be analyzed
-date = '2023-07-25'
-time = '12-49-38'
+date = '2023-07-28'
+time = '12-32-00'
 files = rosbag_folder + "all_" + date + "-" + time + ".bag"
 
 time_offset = 0
@@ -30,7 +30,7 @@ if h_ref:
     column_names = ['time','h_ref']
     df_ref = pd.DataFrame(columns=column_names)
     
-    for topic, msg, t in bag.read_messages(topics='/h_ref'):
+    for topic, msg, t in bag.read_messages(topics='/optitrack'):
         ref = msg.data
         ts = t.to_sec()
         
