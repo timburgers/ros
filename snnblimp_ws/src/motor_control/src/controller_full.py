@@ -53,7 +53,7 @@ class Controller:
         self.error = 0.0
 
         # Controllers
-        self.pid = PID.PID(3.9, 0.55, 7.4, 1/FREQUENCY, True) # self.pid = PID.PID(P, I, D, dt, simple)
+        self.pid = PID.PID(3.85, 0.58, 7.1, 1/FREQUENCY, True) # self.pid = PID.PID(P, I, D, dt, simple)
         
         # SNN
         # self.init_SNN_model()
