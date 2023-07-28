@@ -24,19 +24,11 @@ from pygad.torchga import model_weights_as_dict
 from std_msgs.msg import Float32
 # Publishing messages
 from motor_control.msg import MotorCommand
+from motor_control.msg import PID_seperate
 
 # Global variables:
 FREQUENCY = 30.0
 FILENAME = "345-morning-tree"
-
-class PID_seperate:
-    def __init__(self, p,i,d):
-        self.p = Float32(p)
-        self.i = Float32(i)
-        self.d = Float32(d)
-
-    def __repr__(self):
-        return f"ThreeFloats({self.p}, {self.i}, {self.d})"
 
 
 class Controller:
@@ -128,7 +120,10 @@ class Controller:
         
         # Create motor command from PID
         pe,ie,de  = self.update_PID()
-        self.pub_msg_pid = PID_seperate(pe,ie,de)
+        self.pub_msg_pid = PID_seperate()
+        self.pub_msg_pid.pe = pe
+        self.pub_msg_pid.ie = ie
+        self.pub_msg_pid.de = de
         u = pe + ie + de
         # for more insight in pid
         self.pub_pid.publish(self.pub_msg_pid)
