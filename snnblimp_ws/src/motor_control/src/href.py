@@ -45,9 +45,7 @@ if __name__ == '__main__':
             pub_h_ref.publish(msg)
             rate.sleep()
             if ind >= len(h_ref_list)-1:
-                uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
-                launch = roslaunch.parent.ROSLaunchParent(uuid, ["/home/tim/ros/snnblimp_ws/src/motor_control/launch/motor_controller.launch"])
-                launch.shutdown()
+                rospy.signal_shutdown("Time Over")
             else: ind +=1
     
 

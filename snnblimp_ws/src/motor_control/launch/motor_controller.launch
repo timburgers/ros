@@ -48,6 +48,7 @@
         type="href.py"
         name="reference_input"
         output="screen"
+        required="true"
     />
     
     <node
