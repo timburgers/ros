@@ -4,6 +4,7 @@ from std_msgs.msg import Float32
 from random import uniform
 import numpy as np
 import time
+from motor_control.msg import MotorCommand
 
 
 MODE = "list"       # either "list" or "random"
@@ -12,20 +13,32 @@ def get_sec(time_str):
     h, m, s = time_str.split(':')
     return int(h) * 3600 + int(m) * 60 + int(s)
 
+
+
+
+
 if __name__ == '__main__':
+    def callback_motor_command(msg):
+        motor_running = True
+
     rospy.init_node("generate_h_ref")
     rospy.loginfo("Generate h ref node has been started")
-
+    sub_motor_control = rospy.Subscriber("/h_ref", MotorCommand, callback_motor_command)
     pub_h_ref = rospy.Publisher("/h_ref",Float32, queue_size=1)
+    motor_running = False
+
+
 
     if MODE == "list":
         # Parameters
         frequency = 0.04                     # [Hz]
-        h_ref_list = [0.8,1.6,0.8,1.6,2.4,1.6,0.8]    
+        h_ref_list = [0.8,1.6,2.4,1.6,0.8]    
 
         ### running Node
         ind = 0
         rate = rospy.Rate(frequency)
+        while motor_running == False:
+            time.sleep(0.5)
 
         while not rospy.is_shutdown():
             msg=Float32()
