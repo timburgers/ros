@@ -23,9 +23,8 @@ if __name__ == '__main__':
 
     rospy.init_node("generate_h_ref")
     rospy.loginfo("Generate h ref node has been started")
-    sub_motor_control = rospy.Subscriber("/h_ref", MotorCommand, callback_motor_command)
     pub_h_ref = rospy.Publisher("/h_ref",Float32, queue_size=1)
-    motor_running = False
+
 
 
 
@@ -36,9 +35,8 @@ if __name__ == '__main__':
 
         ### running Node
         ind = 0
+        rospy.wait_for_message("/motor_control", MotorCommand, timeout=None)
         rate = rospy.Rate(frequency)
-        while motor_running == False:
-            time.sleep(0.5)
 
         while not rospy.is_shutdown():
             msg=Float32()
