@@ -9,8 +9,10 @@ for file in os.listdir(folder_path):
     if file.endswith(".csv"):
         file_names.append(file)
 
+ind = 0
 for file in file_names:
-    print("1) ", file)
+    print(ind,") ", file)
+    ind +=1
 # file_names = ["all_2023-07-28-14-06-15.csv",
 #             "all_2023-07-31-11-40-26.csv"]
             #   "all_2023-07-28-14-09-30.csv"]
