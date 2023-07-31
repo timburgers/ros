@@ -1,10 +1,18 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import csv
+import os
  
 folder_path = "/home/tim/ros/snnblimp_ws/rosbag/best/csv/"
-file_names = ["all_2023-07-28-14-06-15.csv",
-            "all_2023-07-31-11-40-26.csv"]
+file_names = []
+for file in os.listdir(folder_path):
+    if file.endswith(".csv"):
+        file_names.append(file)
+
+for file in file_names:
+    print("1) ", file)
+# file_names = ["all_2023-07-28-14-06-15.csv",
+#             "all_2023-07-31-11-40-26.csv"]
             #   "all_2023-07-28-14-09-30.csv"]
             #   "all_2023-07-28-12-26-05.csv"]
 
