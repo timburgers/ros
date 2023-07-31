@@ -27,7 +27,7 @@ from motor_control.msg import MotorCommand
 from motor_control.msg import PID_seperate
 
 # Global variables:
-FREQUENCY = 30.0
+FREQUENCY = 10.0
 FILENAME = "345-morning-tree"
 
 
@@ -55,7 +55,7 @@ class Controller:
         self.error = 0.0
 
         # Controllers
-        self.pid = PID.PID(4, 0.6, 4, 1/FREQUENCY, True) # self.pid = PID.PID(P, I, D, dt, simple)
+        self.pid = PID.PID(4, 0.6, 7, 1/FREQUENCY, True) # self.pid = PID.PID(P, I, D, dt, simple)
         
         # SNN
         # self.init_SNN_model()
