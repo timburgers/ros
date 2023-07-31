@@ -26,6 +26,7 @@
         name="subscribe_to_speed"
         output="screen"
         launch-prefix="sudo -E"
+        required="true"
     >
         <param name="cw_pwmPin" value="19" />
         <param name="cw_dirPin" value="26" />
