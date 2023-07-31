@@ -2,10 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import csv
  
-folder_path = "/home/tim/ros/snnblimp_ws/rosbag/best/"
+folder_path = "/home/tim/ros/snnblimp_ws/rosbag/best/csv/"
 file_names = ["all_2023-07-28-14-06-15.csv",
-              "all_2023-07-28-14-36-05.csv", 
-              "all_2023-07-28-14-45-54.csv"]
+            "all_2023-07-31-11-40-26.csv"]
             #   "all_2023-07-28-14-09-30.csv"]
             #   "all_2023-07-28-12-26-05.csv"]
 
