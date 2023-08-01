@@ -53,10 +53,11 @@ if __name__ == '__main__':
 
     if MODE == "random":
         # Parameters
-        sim_time = "00:05:00"
-        height_bounds       = [0.5,   1]    # [m]
-        frequency_bounds    = [30, 40]      # [s]
-        minimal_step_size   = 0.1           # [m]
+        sim_time = "00:06:00"
+        height_bounds       = [0.5,   2.2]    # [m]
+        frequency_bounds    = [25, 35]      # [s]
+        minimal_step_size   = 0.3           # [m]
+        maximal_step_size   = 0.8           # [m]
         init_h_ref          = 0.8
         init_freq           = 0.04
 
@@ -68,7 +69,7 @@ if __name__ == '__main__':
         time_start = time.time()
         time_new =time.time()
 
-        
+        rospy.wait_for_message("/motor_control", MotorCommand, timeout=None)
         time.sleep(1)
         while (not rospy.is_shutdown() and time_new-time_start < sim_time):
             rate = rospy.Rate(freq)
@@ -84,7 +85,7 @@ if __name__ == '__main__':
 
             i=0
             time_new = time.time()
-            while (abs(h_ref-h_ref_prev)<minimal_step_size and i<1000):
+            while ((abs(h_ref-h_ref_prev)<minimal_step_size or abs(h_ref-h_ref_prev)>maximal_step_size )and i<2000):
                 h_ref = round(uniform(height_bounds[0], height_bounds[1]),1)
                 i+=1
             rospy.loginfo("time to next ref point = " + str(round(1/freq,1)) + " sec" )

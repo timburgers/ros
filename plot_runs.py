@@ -55,8 +55,11 @@ for file in file_names:
         
 
 for i in range(len(file_names)):
-    plt.plot(t[:,i],ref[:,i])
-    plt.plot(t[:,i],meas[:,i],label = str(i))
+    # plt.plot(t[:,i],ref[:,i])
+    # plt.plot(t[:,i],meas[:,i],label = str(i))
+
+    #
+    plt.plot(t[:number_of_samples[i],i],u[:number_of_samples[i],i],label = str(i))
 
 plt.grid()
 plt.legend()

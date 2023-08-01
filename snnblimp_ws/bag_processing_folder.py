@@ -136,6 +136,8 @@ for file in all_files:
     df_final["time"] = df_final["time"] - df_final["time"][0]
     df_final.dropna(inplace=True)
 
+    # df_final.drop(df_final.tail(1).index,inplace=True)
+
     file_csv = file.split(".")[0] + ".csv"
     df_final.to_csv(path_or_buf= rosbag_folder + "csv/" +file_csv, index=False)
  
