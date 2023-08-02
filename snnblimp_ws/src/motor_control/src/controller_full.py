@@ -29,19 +29,19 @@ from motor_control.msg import PID_seperate
 # Global variables:
 FREQUENCY = 5.0
 FILENAME = "31-efficient-snowflake"
-
+MODE = "snn"        #either "pid" or "snn"
 
 class Controller:
     
     def __init__(self):
+        self.mode = MODE
         # Subscribers and Publisher
         # self.sub_radar = rospy.Subscriber("/h_meas", MyEventArray, self.callback_radar)
         self.sub_h_meas = rospy.Subscriber("/tfmini_ros_node/TFmini", Float32, self.callback_h_meas, tcp_nodelay=True)
         self.sub_h_ref = rospy.Subscriber("/h_ref", Float32, self.callback_h_ref, tcp_nodelay=True)
         self.pub_motor = rospy.Publisher("/motor_control", MotorCommand, queue_size = 1,tcp_nodelay=True)        #send to the motor_controller
-        self.pub_pid   = rospy.Publisher("/u_pid", PID_seperate, queue_size = 1,tcp_nodelay=True)
-        self.pub_snn   = rospy.Publisher("/u_snn", Float32, queue_size = 1, tcp_nodelay=True)
-
+        
+    
         # Messages
         self.pub_msg = MotorCommand()
         self.pub_msg_pid = Float32()
@@ -55,10 +55,13 @@ class Controller:
         self.error = 0.0
 
         # Controllers
-        self.pid = PID.PID(10, 0.75, 12, 1/FREQUENCY, True) # self.pid = PID.PID(P, I, D, dt, simple)
+        if self.mode =="pid":
+            self.pub_pid   = rospy.Publisher("/u_pid", PID_seperate, queue_size = 1,tcp_nodelay=True)
+            self.pid = PID.PID(10, 0.75, 12, 1/FREQUENCY, True) # self.pid = PID.PID(P, I, D, dt, simple)
         
-        # SNN
-        # self.init_SNN_model()
+        elif self.mode == "snn":
+            self.pub_snn   = rospy.Publisher("/u_snn", Float32, queue_size = 1, tcp_nodelay=True)
+            self.init_SNN_model()
 
 
     def init_SNN_model(self):
@@ -119,20 +122,21 @@ class Controller:
         self.error = self.h_ref - self.h_meas
         
         # Create motor command from PID
-        pe,ie,de  = self.update_PID()
-        self.pub_msg_pid = PID_seperate()
-        self.pub_msg_pid.pe = pe
-        self.pub_msg_pid.ie = ie
-        self.pub_msg_pid.de = de
-        u = pe + ie + de
-        # for more insight in pid
-        self.pub_pid.publish(self.pub_msg_pid)
+        if self.mode == "pid":
+            pe,ie,de  = self.update_PID()
+            self.pub_msg_pid = PID_seperate()
+            self.pub_msg_pid.pe = pe
+            self.pub_msg_pid.ie = ie
+            self.pub_msg_pid.de = de
+            u = pe + ie + de
+            # for more insight in pid
+            self.pub_pid.publish(self.pub_msg_pid)
 
-
+        elif self.mode == "snn":
         # Create motor command from SNN
-        # u = self.update_SNN()
-        # self.pub_msg_snn = u
-        # self.pub_snn.publish(self.pub_msg_snn)
+            u = self.update_SNN()
+            self.pub_msg_snn = u
+            self.pub_snn.publish(self.pub_msg_snn)
 
         #Create message for the motor controller
         self.pub_msg.ts = rospy.get_rostime()
