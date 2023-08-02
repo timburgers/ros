@@ -29,7 +29,7 @@ from motor_control.msg import PID_seperate
 # Global variables:
 FREQUENCY = 5.0
 FILENAME = "31-efficient-snowflake"
-MODE = "pid"        #either "pid" or "snn"
+MODE = "snn"        #either "pid" or "snn"
 
 class Controller:
     
@@ -66,7 +66,7 @@ class Controller:
 
     def init_SNN_model(self):
         # Unpack the selected .pkl file 
-        pickle_in = open("/home/pi/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+FILENAME+".pkl","rb")
+        pickle_in = open("/home/tim/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+FILENAME+".pkl","rb")
         dict_solutions = pickle.load(pickle_in)
 
         #Unpack in usefull variables
@@ -135,6 +135,7 @@ class Controller:
         elif self.mode == "snn":
         # Create motor command from SNN
             u = self.update_SNN()
+            u =-u
             self.pub_msg_snn = u
             self.pub_snn.publish(self.pub_msg_snn)
 
