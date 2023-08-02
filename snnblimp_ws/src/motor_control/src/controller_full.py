@@ -66,11 +66,11 @@ class Controller:
 
     def init_SNN_model(self):
         # Unpack the selected .pkl file 
-        pickle_in = open("/home/pi/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+FILENAME+".pkl","rb")
+        pickle_in = open("/home/tim/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+FILENAME+".pkl","rb")
         dict_solutions = pickle.load(pickle_in)
 
         #Unpack in usefull variables
-        solution             = dict_solutions["best_solution"]      #Lowest error (Overall, not only test sequence)
+        # solution             = dict_solutions["best_solution"]      #Lowest error (Overall, not only test sequence)
         test_solutions       = dict_solutions["test_solutions"]     #All solutions to the test sequence
         solutions_error      = dict_solutions["error"]              #All errors of the test solutions
         config               = dict_solutions["config"]             #Configfile set for the evolution of the network
@@ -85,7 +85,7 @@ class Controller:
         else:              self.controller = L1_Decoding_SNN(None, config["NEURONS"], config["LAYER_SETTING"])
 
         # Convert the model weight in a dict 
-        final_parameters = model_weights_as_dict(self.controller, solution)
+        final_parameters = model_weights_as_dict(self.controller, self.solution)
         self.controller.load_state_dict(final_parameters)
 
         # Assign the complete network its paramaeters (since some parameters are shared during training)

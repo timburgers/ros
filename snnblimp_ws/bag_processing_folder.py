@@ -143,22 +143,21 @@ for file in all_files:
     df_final.dropna(inplace=True)
     df_final["time"] = df_final["time"] - df_final["time"].iloc[0]
 
-    # df_final.drop(df_final.tail(1).index,inplace=True)
 
 
     # remove first step which was not responding
-    df_final = df_final.iloc[294:]
-    df_final["time"] = df_final["time"] - df_final["time"].iloc[0]
+    # df_final = df_final.iloc[294:]
+    # df_final["time"] = df_final["time"] - df_final["time"].iloc[0]
 
-    # Find the rows where the reference input changes
-    mask = df_final['h_ref'] != df_final['h_ref'].shift()
-    rows_with_change = df_final.index[mask]
-    rows_with_change = rows_with_change - rows_with_change[0]
-    print("Rows with change: ", rows_with_change)
-    df_final["ref_change_ind"] = -1
-    for i in range(rows_with_change.size):
-        df_final["ref_change_ind"].iloc[i] = rows_with_change[i]
-    # df_final["ref_change_ind"] = rows_with_change
+    # # Find the rows where the reference input changes
+    # mask = df_final['h_ref'] != df_final['h_ref'].shift()
+    # rows_with_change = df_final.index[mask]
+    # rows_with_change = rows_with_change - rows_with_change[0]
+    # print("Rows with change: ", rows_with_change)
+    # df_final["ref_change_ind"] = -1
+    # for i in range(rows_with_change.size):
+    #     df_final["ref_change_ind"].iloc[i] = rows_with_change[i]
+    # # df_final["ref_change_ind"] = rows_with_change
 
 
 
