@@ -28,7 +28,7 @@ from motor_control.msg import PID_seperate
 
 # Global variables:
 FREQUENCY = 5.0
-FILENAME = "345-morning-tree"
+FILENAME = "31-efficient-snowflake"
 
 
 class Controller:
@@ -63,7 +63,7 @@ class Controller:
 
     def init_SNN_model(self):
         # Unpack the selected .pkl file 
-        pickle_in = open("/home/pi/ros/snnblimp_ws/src/motor_control/src/"+FILENAME+".pkl","rb")
+        pickle_in = open("/home/pi/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+FILENAME+".pkl","rb")
         dict_solutions = pickle.load(pickle_in)
 
         #Unpack in usefull variables

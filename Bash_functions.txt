@@ -1,0 +1,2 @@
+scp -p delftblue:/scratch/timburgers/SNN_Workspace/Results_EA/Blimp/31-efficient-snowflake.pkl /home/tim/ros/snnblimp_ws/src/motor_control/src/snn_controllers
+
