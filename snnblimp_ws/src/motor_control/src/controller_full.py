@@ -66,7 +66,7 @@ class Controller:
 
     def init_SNN_model(self):
         # Unpack the selected .pkl file 
-        pickle_in = open("/home/tim/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+FILENAME+".pkl","rb")
+        pickle_in = open("/home/pi/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+FILENAME+".pkl","rb")
         dict_solutions = pickle.load(pickle_in)
 
         #Unpack in usefull variables
