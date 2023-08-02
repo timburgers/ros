@@ -29,7 +29,7 @@ from motor_control.msg import PID_seperate
 # Global variables:
 FREQUENCY = 5.0
 FILENAME = "31-efficient-snowflake"
-MODE = "snn"        #either "pid" or "snn"
+MODE = "pid"        #either "pid" or "snn"
 
 class Controller:
     
