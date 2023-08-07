@@ -32,7 +32,7 @@ if __name__ == '__main__':
     if MODE == "list":
         # Parameters
         frequency = 0.04                     # [Hz]
-        h_ref_list = [0.8,1.6,0.8,1.6,0.8]    
+        h_ref_list = [0.5,1.0,0.5,1.0,0.8]    
 
         ### running Node
         ind = 0
