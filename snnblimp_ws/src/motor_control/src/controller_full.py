@@ -218,7 +218,7 @@ class Controller:
             # for more insight in pid
             self.pub_pid.publish(self.pub_msg_pid)
 
-        elif self.mode == "snn":
+        elif self.mode == "snn" or self.mode == "snn_sep":
         # Create motor command from SNN
             u = self.update_SNN()
             # u =-u
