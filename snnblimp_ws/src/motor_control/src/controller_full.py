@@ -28,7 +28,7 @@ from motor_control.msg import PID_seperate
 
 # Global variables:
 FREQUENCY = 5.0
-MODE = "snn_sep"        #either "pid" or "snn" or "snn_sep"
+MODE = "pid"        #either "pid" or "snn" or "snn_sep"
 
 SNN_FULL = ""
 
