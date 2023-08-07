@@ -28,11 +28,11 @@ from motor_control.msg import PID_seperate
 
 # Global variables:
 FREQUENCY = 5.0
-MODE = "pid"        #either "pid" or "snn" or "snn_sep"
+MODE = "snn_pid"        #either "pid" or "snn" or "snn_sep" or "snn_pid"
 
-SNN_FULL = ""
+SNN_FULL = "228-dashing-meadow"
 
-SNN_PD = "228-dashing-meadow"
+SNN_PD = ""
 SNN_I = "247-desert-snowflake"
 
 
@@ -72,6 +72,12 @@ class Controller:
             self.pub_snn   = rospy.Publisher("/u_snn", Float32, queue_size = 1, tcp_nodelay=True)
             self.pub_snn_pd_i   = rospy.Publisher("/u_pid", PID_seperate, queue_size = 1,tcp_nodelay=True)
             self.init_SNN_model_sep(SNN_PD, SNN_I)
+
+        elif self.mode == "snn_pid":
+            self.pub_snn_pd_i   = rospy.Publisher("/u_pid", PID_seperate, queue_size = 1,tcp_nodelay=True)
+            self.pid = PID.PID(10, 0.75, 12, 1/FREQUENCY, True) # self.pid = PID.PID(P, I, D, dt, simple)
+            self.init_SNN_model(SNN_FULL)
+
 
 
 
@@ -194,15 +200,15 @@ class Controller:
     def update_SNN(self):
         error = torch.Tensor([self.error])
         
-        if self.mode == "snn":
+        if self.mode == "snn" or self.mode == "snn_pid":
             if self.enc_lay_enabled:      self.state_l0, self.state_l1, self.state_l2 = self.controller(error,self.state_l0, self.state_l1, self.state_l2)
             else:                         self.state_l1, self.state_l2 = self.controller(error, self.state_l1, self.state_l2)
+            return self.state_l2
         
         elif self.mode == "snn_sep":
             self.state_l0_pd, self.state_l1_pd, self.state_l2_pd = self.controller_pd(error,self.state_l0_pd, self.state_l1_pd, self.state_l2_pd)
             self.state_l0_i, self.state_l1_i, self.state_l2_i = self.controller_i(error,self.state_l0_i, self.state_l1_i, self.state_l2_i)
-
-        return self.state_l2_pd, self.state_l2_i
+            return self.state_l2_pd, self.state_l2_i
 
     def update_command(self):
         rospy.loginfo("h_meas = " + str(self.h_meas))
@@ -235,6 +241,21 @@ class Controller:
             self.pub_msg_snn_sep.ie = u_i
             self.pub_snn_pd_i.publish(self.pub_msg_snn_sep)
             u = u_pd  + u_i
+        
+
+        elif self.mode == "snn_pid":
+        # Create motor command from SNN
+            u_snn = self.update_SNN()
+            pe,ie,de  = self.update_PID()
+            u = u_snn + ie
+            
+            self.pub_msg_snn_sep = PID_seperate()
+            self.pub_msg_snn_sep.pe = u_snn
+            self.pub_msg_snn_sep.ie = ie
+            self.pub_snn_pd_i.publish(self.pub_msg_snn_sep)
+
+
+
         #Create message for the motor controller
         self.pub_msg.ts = rospy.get_rostime()
 
