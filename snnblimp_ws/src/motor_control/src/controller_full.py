@@ -30,9 +30,9 @@ from motor_control.msg import PID_seperate
 FREQUENCY = 5.0
 MODE = "snn_pid"        #either "pid" or "snn" or "snn_sep" or "snn_pid"
 
-SNN_FULL = "228-dashing-meadow"
+SNN_FULL = "247-desert-snowflake"
 
-SNN_PD = ""
+SNN_PD = "228-dashing-meadow"
 SNN_I = "247-desert-snowflake"
 
 
@@ -247,7 +247,7 @@ class Controller:
         # Create motor command from SNN
             u_snn = self.update_SNN()
             pe,ie,de  = self.update_PID()
-            u = u_snn + ie
+            u = u_snn + pe+ de
             
             self.pub_msg_snn_sep = PID_seperate()
             self.pub_msg_snn_sep.pe = u_snn
