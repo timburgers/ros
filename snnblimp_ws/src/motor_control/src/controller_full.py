@@ -247,7 +247,7 @@ class Controller:
         # Create motor command from SNN
             u_snn = self.update_SNN()
             pe,ie,de  = self.update_PID()
-            u = u_snn + pe+ de
+            u = u_snn + ie
             
             self.pub_msg_snn_sep = PID_seperate()
             self.pub_msg_snn_sep.pe = u_snn
