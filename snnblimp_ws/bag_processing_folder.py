@@ -28,6 +28,7 @@ for file in all_files:
     optitrack     = True
     motor_control = True
     u_pid         = True
+    u_snn           = True
 
 
     bag = rosbag.Bag(bagfile)
@@ -106,7 +107,7 @@ for file in all_files:
     
     if u_pid:
         # ---> Build MOTOR_CONTROL dataframe: df_motor
-        column_names = ['time','u_p','u_i','u_d','u_pd']
+        column_names = ['time','pid_p','pid_i','pid_d','pid_pd']
         df_pid = pd.DataFrame(columns=column_names)
         
         for topic, msg, t in bag.read_messages(topics='/u_pid'):
@@ -125,6 +126,25 @@ for file in all_files:
                     'u_pd':u_p+u_d},
                     ignore_index=True
                 )
+    
+    if u_snn:
+        # ---> Build MOTOR_CONTROL dataframe: df_motor
+        column_names = ['time','snn_pd','snn_i']
+        df_snn = pd.DataFrame(columns=column_names)
+        
+        for topic, msg, t in bag.read_messages(topics='/u_snn'):
+            snn_pd = msg.snn_pd
+            snn_i  = msg.snn_i
+            ts = t.to_sec()
+        
+            if ts > time_offset:
+        
+                df_snn = df_snn.append(
+                    {'time': ts,
+                    'snn_pd': snn_pd,
+                    'snn_i': snn_i},
+                    ignore_index=True
+                )
         
 
 
@@ -134,6 +154,7 @@ for file in all_files:
         df_final = pd.merge_asof(df_motor,df_ref, on="time")
         df_final = pd.merge_asof(df_final,df_meas, on="time")
         df_final = pd.merge_asof(df_final,df_pid, on="time")
+        df_final = pd.merge_asof(df_final,df_snn, on="time")
 
     # elif not radar_targets and optitrack and motor_control:
     #     first_sec = int(df_optitrack["time"].iloc[0])

@@ -25,6 +25,7 @@ from std_msgs.msg import Float32
 # Publishing messages
 from motor_control.msg import MotorCommand
 from motor_control.msg import PID_seperate
+from motor_control.msg import SNN_seperate
 
 # Global variables:
 FREQUENCY = 5.0
@@ -69,12 +70,12 @@ class Controller:
             self.init_SNN_model(SNN_FULL)
 
         elif self.mode == "snn_sep":
-            self.pub_snn   = rospy.Publisher("/u_snn", Float32, queue_size = 1, tcp_nodelay=True)
-            self.pub_snn_pd_i   = rospy.Publisher("/u_pid", PID_seperate, queue_size = 1,tcp_nodelay=True)
+            self.pub_snn   = rospy.Publisher("/u_snn", SNN_seperate, queue_size = 1, tcp_nodelay=True)
             self.init_SNN_model_sep(SNN_PD, SNN_I)
 
         elif self.mode == "snn_pid":
-            self.pub_snn_pd_i   = rospy.Publisher("/u_pid", PID_seperate, queue_size = 1,tcp_nodelay=True)
+            self.pub_snn   = rospy.Publisher("/u_snn", SNN_seperate, queue_size = 1,tcp_nodelay=True)
+            self.pub_pid   = rospy.Publisher("/u_pid", PID_seperate, queue_size = 1,tcp_nodelay=True)
             self.pid = PID.PID(10, 0.75, 12, 1/FREQUENCY, True) # self.pid = PID.PID(P, I, D, dt, simple)
             self.init_SNN_model(SNN_FULL)
 
@@ -236,10 +237,10 @@ class Controller:
         # Create motor command from SNN
             u_pd, u_i = self.update_SNN()
             # u =-u
-            self.pub_msg_snn_sep = PID_seperate()
-            self.pub_msg_snn_sep.pe = u_pd
-            self.pub_msg_snn_sep.ie = u_i
-            self.pub_snn_pd_i.publish(self.pub_msg_snn_sep)
+            self.pub_msg_snn = SNN_seperate()
+            self.pub_msg_snn.snn_pd = u_pd
+            self.pub_msg_snn.snn_i = u_i
+            self.pub_snn.publish(self.pub_msg_snn)
             u = u_pd  + u_i
         
 
@@ -249,10 +250,13 @@ class Controller:
             pe,ie,de  = self.update_PID()
             u = u_snn + ie
             
-            self.pub_msg_snn_sep = PID_seperate()
-            self.pub_msg_snn_sep.pe = u_snn
-            self.pub_msg_snn_sep.ie = ie
-            self.pub_snn_pd_i.publish(self.pub_msg_snn_sep)
+            self.pub_msg_pid = PID_seperate()
+            self.pub_msg_pid.ie = ie
+            self.pub_pid.publish(self.pub_msg_pid)
+
+            self.pub_msg_snn = SNN_seperate()
+            self.pub_msg_snn.snn_pd = u_snn             #either "snn_pd" or "snn_i"
+            self.pub_snn.publish(self.pub_msg_snn)
 
 
 
