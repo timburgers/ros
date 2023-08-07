@@ -195,7 +195,7 @@ for file in all_files:
     df_final.drop(["servo"], axis=1, inplace=True)
 
     # df_final["time"] = df_final["time"] - df_final["time"][0]
-    # df_final.dropna(inplace=True)
+    df_final.dropna(inplace=True)
     df_final["time"] = df_final["time"] - df_final["time"].iloc[0]
 
 
