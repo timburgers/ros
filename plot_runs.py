@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import csv
 import os
+import pandas as pd
  
 folder_path = "/home/tim/ros/snnblimp_ws/rosbag/new/csv/"
 file_names = []
@@ -44,7 +45,7 @@ for file in file_names:
         header = next(csv_reader)  # Read and skip the header row
         row_ind = 0
         for row in csv_reader:
-           ti,ui,refi,measi,_,_= row  # Unpack the row into separate variables
+           ti,ui,refi,measi,p,i,d,p_d ,error= row  # Unpack the row into separate variables
            t[row_ind,file_ind] =  ti  
            u[row_ind,file_ind] =  ui  
            ref[row_ind,file_ind] =  refi  
@@ -52,14 +53,33 @@ for file in file_names:
            row_ind +=1 
 
     file_ind +=1
-        
+
+
+# Calculate moving average
+window_size = 10
+i = 0
+
+# Convert array of integers to pandas series
+numbers_series = pd.DataFrame(u)
+  
+# Get the window of series
+# of observations of specified window size
+windows = numbers_series.rolling(window_size)
+  
+# Create a series of moving
+# averages of each window
+moving_averages = windows.mean()
+# moving_averages.dropna(inplace=True)
+# Convert pandas series back to list
+moving_averages_numpy = moving_averages.to_numpy()
 
 for i in range(len(file_names)):
     plt.plot(t[:,i],ref[:,i])
     plt.plot(t[:,i],meas[:,i],label = str(i))
 
     #
-    # plt.plot(t[:number_of_samples[i],i],u[:number_of_samples[i],i],label = str(i))
+    plt.plot(t[:number_of_samples[i],i],u[:number_of_samples[i],i],label = str(i))
+    plt.plot(t[:number_of_samples[i],i],moving_averages_numpy[:number_of_samples[i],i],label = str(i)+"_filtered")
 
 plt.grid()
 plt.legend()

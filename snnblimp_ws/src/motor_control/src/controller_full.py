@@ -28,8 +28,13 @@ from motor_control.msg import PID_seperate
 
 # Global variables:
 FREQUENCY = 5.0
-FILENAME = "31-efficient-snowflake"
-MODE = "snn"        #either "pid" or "snn"
+MODE = "snn_sep"        #either "pid" or "snn" or "snn_sep"
+
+SNN_FULL = ""
+
+SNN_PD = "228-dashing-meadow"
+SNN_I = "247-desert-snowflake"
+
 
 class Controller:
     
@@ -61,12 +66,18 @@ class Controller:
         
         elif self.mode == "snn":
             self.pub_snn   = rospy.Publisher("/u_snn", Float32, queue_size = 1, tcp_nodelay=True)
-            self.init_SNN_model()
+            self.init_SNN_model(SNN_FULL)
+
+        elif self.mode == "snn_sep":
+            self.pub_snn   = rospy.Publisher("/u_snn", Float32, queue_size = 1, tcp_nodelay=True)
+            self.init_SNN_model_sep(SNN_PD, SNN_I)
 
 
-    def init_SNN_model(self):
+
+
+    def init_SNN_model(self, pkl_file):
         # Unpack the selected .pkl file 
-        pickle_in = open("/home/pi/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+FILENAME+".pkl","rb")
+        pickle_in = open("/home/pi/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+pkl_file+".pkl","rb")
         dict_solutions = pickle.load(pickle_in)
 
         #Unpack in usefull variables
@@ -99,6 +110,76 @@ class Controller:
         self.state_l2                               = torch.zeros(self.controller.l2.neuron.state_size,1)
 
 
+
+    def init_SNN_model_sep(self, pd_contr, i_contr):
+        # Unpack the selected .pkl file 
+        pickle_pd = open("/home/pi/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+pd_contr+".pkl","rb")
+        dict_pd = pickle.load(pickle_pd)
+
+        #Unpack in usefull variables
+        # solution             = dict_solutions["best_solution"]      #Lowest error (Overall, not only test sequence)
+        test_solutions_pd       = dict_pd["test_solutions"]     #All solutions to the test sequence
+        solutions_error_pd      = dict_pd["error"]              #All errors of the test solutions
+        config_pd               = dict_pd["config"]             #Configfile set for the evolution of the network
+
+        # Select the best performing (lowest test error) in the network
+        best_sol_ind_pd = np.argmin(solutions_error_pd)
+        self.solution_pd = test_solutions_pd[best_sol_ind_pd+1] #+1 since first of solution_testrun is only zeros
+
+        # Initiailize the SNN model (only structure, not weights)
+        if config_pd["LAYER_SETTING"]["l0"]["enabled"]: self.controller_pd = Encoding_L1_Decoding_SNN(None, config_pd["NEURONS"], config_pd["LAYER_SETTING"])
+        else:                                           self.controller_pd = L1_Decoding_SNN(None, config_pd["NEURONS"], config_pd["LAYER_SETTING"])
+
+        # Convert the model weight in a dict 
+        final_parameters_pd = model_weights_as_dict(self.controller_pd, self.solution_pd)
+        self.controller_pd.load_state_dict(final_parameters_pd)
+
+        # Assign the complete network its paramaeters (since some parameters are shared during training)
+        self.controller_pd.l0.init_reshape()
+        self.controller_pd.l1.init_reshape()
+        self.controller_pd.l2.init_reshape()
+
+        #Initialize the states of all the neurons in each layer to zero
+        self.state_l0_pd      = torch.zeros(self.controller_pd.l0.neuron.state_size, 1, self.controller_pd.l1_input)
+        self.state_l1_pd      = torch.zeros(self.controller_pd.l1.neuron.state_size, 1, self.controller_pd.neurons) 
+        self.state_l2_pd      = torch.zeros(self.controller_pd.l2.neuron.state_size,1)
+
+    ### Init the I controller
+
+        # Unpack the selected .pkl file 
+        pickle_i = open("/home/pi/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+i_contr+".pkl","rb")
+        dict_i = pickle.load(pickle_i)
+
+        #Unpack in usefull variables
+        # solution             = dict_solutions["best_solution"]      #Lowest error (Overall, not only test sequence)
+        test_solutions_i       = dict_i["test_solutions"]     #All solutions to the test sequence
+        solutions_error_i      = dict_i["error"]              #All errors of the test solutions
+        config_i               = dict_i["config"]             #Configfile set for the evolution of the network
+
+        # Select the best performing (lowest test error) in the network
+        best_sol_ind_i = np.argmin(solutions_error_i)
+        self.solution_i = test_solutions_i[best_sol_ind_i+1] #+1 since first of solution_testrun is only zeros
+
+        # Initiailize the SNN model (only structure, not weights)
+        if config_i["LAYER_SETTING"]["l0"]["enabled"]: self.controller_i = Encoding_L1_Decoding_SNN(None, config_i["NEURONS"], config_i["LAYER_SETTING"])
+        else:                                           self.controller_i = L1_Decoding_SNN(None, config_i["NEURONS"], config_i["LAYER_SETTING"])
+
+        # Convert the model weight in a dict 
+        final_parameters_i = model_weights_as_dict(self.controller_i, self.solution_i)
+        self.controller_i.load_state_dict(final_parameters_i)
+
+        # Assign the complete network its paramaeters (since some parameters are shared during training)
+        self.controller_i.l0.init_reshape()
+        self.controller_i.l1.init_reshape()
+        self.controller_i.l2.init_reshape()
+
+        #Initialize the states of all the neurons in each layer to zero
+        self.state_l0_i      = torch.zeros(self.controller_i.l0.neuron.state_size, 1, self.controller_i.l1_input)
+        self.state_l1_i      = torch.zeros(self.controller_i.l1.neuron.state_size, 1, self.controller_i.neurons) 
+        self.state_l2_i      = torch.zeros(self.controller_i.l2.neuron.state_size,1)
+
+
+
     def callback_h_ref(self, msg):
         self.h_ref = msg.data
 
@@ -112,10 +193,15 @@ class Controller:
     def update_SNN(self):
         error = torch.Tensor([self.error])
         
-        if self.enc_lay_enabled:      self.state_l0, self.state_l1, self.state_l2 = self.controller(error,self.state_l0, self.state_l1, self.state_l2)
-        else:                         self.state_l1, self.state_l2 = self.controller(error, self.state_l1, self.state_l2)
+        if self.mode == "snn":
+            if self.enc_lay_enabled:      self.state_l0, self.state_l1, self.state_l2 = self.controller(error,self.state_l0, self.state_l1, self.state_l2)
+            else:                         self.state_l1, self.state_l2 = self.controller(error, self.state_l1, self.state_l2)
+        
+        elif self.mode == "snn_sep":
+            self.state_l0_pd, self.state_l1_pd, self.state_l2_pd = self.controller_pd(error,self.state_l0_pd, self.state_l1_pd, self.state_l2_pd)
+            self.state_l0_i, self.state_l1_i, self.state_l2_i = self.controller_i(error,self.state_l0_i, self.state_l1_i, self.state_l2_i)
 
-        return self.state_l2
+        return self.state_l2_pd + self.state_l2_i
 
     def update_command(self):
         rospy.loginfo("h_meas = " + str(self.h_meas))
@@ -135,7 +221,7 @@ class Controller:
         elif self.mode == "snn":
         # Create motor command from SNN
             u = self.update_SNN()
-            u =-u
+            # u =-u
             self.pub_msg_snn = u
             self.pub_snn.publish(self.pub_msg_snn)
 

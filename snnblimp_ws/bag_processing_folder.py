@@ -27,6 +27,7 @@ for file in all_files:
     h_meas        = True
     optitrack     = True
     motor_control = True
+    u_pid         = True
 
 
     bag = rosbag.Bag(bagfile)
@@ -102,6 +103,28 @@ for file in all_files:
                     'servo': servo},
                     ignore_index=True
                 )
+    
+    if u_pid:
+        # ---> Build MOTOR_CONTROL dataframe: df_motor
+        column_names = ['time','u_p','u_i','u_d','u_pd']
+        df_pid = pd.DataFrame(columns=column_names)
+        
+        for topic, msg, t in bag.read_messages(topics='/u_pid'):
+            u_p = msg.pe
+            u_i  = msg.ie
+            u_d = msg.de
+            ts = t.to_sec()
+        
+            if ts > time_offset:
+        
+                df_pid = df_pid.append(
+                    {'time': ts,
+                    'u_p': u_p,
+                    'u_i': u_i,
+                    'u_d': u_d,
+                    'u_pd':u_p+u_d},
+                    ignore_index=True
+                )
         
 
 
@@ -110,6 +133,7 @@ for file in all_files:
         # df_final = pd.merge_asof(df_ref, df_optitrack, on="time")
         df_final = pd.merge_asof(df_motor,df_ref, on="time")
         df_final = pd.merge_asof(df_final,df_meas, on="time")
+        df_final = pd.merge_asof(df_final,df_pid, on="time")
 
     # elif not radar_targets and optitrack and motor_control:
     #     first_sec = int(df_optitrack["time"].iloc[0])
@@ -125,14 +149,45 @@ for file in all_files:
     df_final.rename(columns={"cw": "dcmotor"}, inplace=True)
 
     #create a negative dc current
-    condition = df_final["servo"] == 10
+    condition = df_final["servo"] == 1
     df_final["dcmotor"][condition] = df_final["dcmotor"][condition] * (-1)
 
+    #Map the dc motor between -10 and 10 and between [10-100] to [10-15]
     condition = df_final["dcmotor"] > 10
-    df_final["dcmotor"][condition] = 10
+    df_final["dcmotor"][condition] = (df_final["dcmotor"][condition]-10)*5/90+10
 
     condition = df_final["dcmotor"] < -10
-    df_final["dcmotor"][condition] = -10
+    df_final["dcmotor"][condition] = (df_final["dcmotor"][condition]+10)*5/90-10
+
+
+    #Map the dc motor between -10 and 10 and between [10-100] to [10-15]
+    lim_p = 15
+    condition = df_final["u_p"] > lim_p
+    df_final["u_p"][condition] = (df_final["u_p"][condition]-lim_p)*5/90+lim_p
+
+    condition = df_final["u_p"] < -lim_p
+    df_final["u_p"][condition] = (df_final["u_p"][condition]+lim_p)*5/90-lim_p
+
+
+    #Map the dc motor between -10 and 10 and between [10-100] to [10-15]
+    lim_d = 15
+    condition = df_final["u_d"] > lim_d
+    df_final["u_d"][condition] = (df_final["u_d"][condition]-lim_d)*5/90+lim_d
+
+    condition = df_final["u_d"] < -lim_d
+    df_final["u_d"][condition] = (df_final["u_d"][condition]+lim_d)*5/90-lim_d
+
+
+    #Map the dc motor between -10 and 10 and between [10-100] to [10-15]
+    lim_pd = 15
+    condition = df_final["u_pd"] > lim_pd
+    df_final["u_pd"][condition] =(df_final["u_pd"][condition]-lim_pd)*5/90+lim_pd
+
+    condition = df_final["u_pd"] < -lim_pd
+    df_final["u_pd"][condition] = (df_final["u_pd"][condition]+lim_pd)*5/90-lim_pd
+
+
+
 
     df_final["error"] = df_final["h_ref"] - df_final["h_meas"]
 
@@ -140,14 +195,14 @@ for file in all_files:
     df_final.drop(["servo"], axis=1, inplace=True)
 
     # df_final["time"] = df_final["time"] - df_final["time"][0]
-    df_final.dropna(inplace=True)
+    # df_final.dropna(inplace=True)
     df_final["time"] = df_final["time"] - df_final["time"].iloc[0]
 
 
 
     # remove first step which was not responding
-    # df_final = df_final.iloc[294:]
-    # df_final["time"] = df_final["time"] - df_final["time"].iloc[0]
+    # df_final = df_final.iloc[269:]
+    df_final["time"] = df_final["time"] - df_final["time"].iloc[0]
 
     # # Find the rows where the reference input changes
     # mask = df_final['h_ref'] != df_final['h_ref'].shift()
