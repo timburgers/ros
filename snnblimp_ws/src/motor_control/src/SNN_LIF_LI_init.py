@@ -116,7 +116,7 @@ class Encoding_L1_Decoding_SNN(L1_Decoding_SNN):
 			
 
 	def forward(self, input_, state_l0, state_l1, state_l2):
-		input = input_
+		input = input_[0,0,:]
 		state_l0,spikes_l0 = self.l0(state_l0,input)
 		state_l1,spikes_l1 = self.l1(state_l1,spikes_l0)
 		state_l2, _ 		= self.l2(state_l2,spikes_l1)
@@ -134,7 +134,9 @@ def init_l1_l2(neurons,layer_set):
 	l2_shared_wb 			= layer_set["l2"]["shared_weight_and_bias"]
 	l1_w_diagonal 			= layer_set["l1"]["w_diagonal"]
 	l1_w_2x2				= layer_set["l1"]["w_diagonal_2x2"]
+	l1_shared_cross			= layer_set["l1"]["shared_2x2_weight_cross"]
 	l1_adapt_2x2 			= layer_set["l1"]["adapt_2x2_connection"]
+	l1_adapt_baseleak_share = layer_set["l1"]["adapt_share_baseleak_t"]
 	l1_adapt_share_addt		= layer_set["l1"]["adapt_share_add_t"]
 
 	num_neurons_l1 = neurons
@@ -146,7 +148,10 @@ def init_l1_l2(neurons,layer_set):
 	if encoding_layer:
 		if l1_w_diagonal:
 			# Encoded, Diagonal (1x1 or 2x2 diag), Shared
-			if l1_shared_wb: num_param_l1_weight= int(num_neurons_l1/2)
+			if l1_shared_wb: 
+				if l1_shared_cross: num_param_l1_weight= int(num_neurons_l1)
+				else: num_param_l1_weight= int(num_neurons_l1/2)
+					
 
 			# Encoded, Diagonal, Not Shared
 			else:
@@ -176,7 +181,8 @@ def init_l1_l2(neurons,layer_set):
 
 	num_param_l1_addt 	= int(num_neurons_l1*2) if l1_adapt_2x2						else num_neurons_l1
 	if l1_adapt_share_addt: num_param_l1_addt = int(num_neurons_l1/2)
-
+	
+	num_param_l1_base_leak_t = int(num_neurons_l1/2) if l1_adapt_baseleak_share		else num_neurons_l1
 	
 	init_param["l1_thres"]	= torch.ones(num_neurons_l1).float()
 	init_param["l1_leak_v"]	= torch.ones(num_neurons_l1).float()
@@ -194,8 +200,8 @@ def init_l1_l2(neurons,layer_set):
 	
 	# Init Adaptive parameters
 	if l1_adapt:
-		init_param["l1_leak_t"] = torch.ones(num_neurons_l1).float()
-		init_param["l1_base_t"] = torch.ones(num_neurons_l1).float()
+		init_param["l1_leak_t"] = torch.ones(num_param_l1_base_leak_t).float()
+		init_param["l1_base_t"] = torch.ones(num_param_l1_base_leak_t).float()
 		init_param["l1_add_t"] = torch.ones(int(num_param_l1_addt)).float()
 
 	# Init Recurrent Weights

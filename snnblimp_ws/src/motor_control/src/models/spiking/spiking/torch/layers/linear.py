@@ -27,11 +27,17 @@ class BaseLinear(nn.Module):
         try: self.w_diagonal_2x2 = layer_setting["w_diagonal_2x2"]
         except: self.w_diagonal_2x2 = False
 
+        try: self.w2x2_shared_cross = layer_setting["shared_2x2_weight_cross"]
+        except: self.w2x2_shared_cross = False
+
         try: self.shared_leak_i = layer_setting["shared_leak_i"]            
         except: self.shared_leak_i = False
 
         try: self.adaptive = layer_setting["adaptive"]                      
         except: self.adaptive = False
+
+        try: self.adapt_share_baseleak_t = layer_setting["adapt_share_baseleak_t"]
+        except: self.adapt_share_baseleak_t = False
 
         try: self.adapt_2x2_connect = layer_setting["adapt_2x2_connection"]
         except: self.adapt_2x2_connect = False
@@ -69,7 +75,15 @@ class BaseLinear(nn.Module):
                 # Middle layer, Diagonal (2x2)
                 if self.w_diagonal_2x2:
                     # Middle layer, Diagonal (2x2), Shared W&B
-                    if self.weight_and_bias_shared:
+                    if self.w2x2_shared_cross:
+                        ind_param = 0
+                        self.weight = None
+                        for idx_block in range(int(self.output_size/2)):
+                            block_2x2 = torch.tensor([[self.ff.weight[ind_param], self.ff.weight[ind_param+1]],[self.ff.weight[ind_param+1], self.ff.weight[ind_param]]]) #shape [[x0, x1],[x1,x0]]
+                            self.weight = block_2x2 if self.weight == None else torch.block_diag(self.weight, block_2x2)
+                            ind_param += 2
+
+                    elif self.weight_and_bias_shared:
                         ind_param = 0
                         self.weight = None
                         for idx_block in range(int(self.output_size/2)):
@@ -96,8 +110,7 @@ class BaseLinear(nn.Module):
 
                     # Middle layer, Diagonal (1x1), NON Shared W&B
                     else:
-                        self.weight = self.ff.weight 
-                        self.weight = torch.diag(self.weight) 
+                        self.weight = torch.diag(self.ff.weight) 
                 
             # Middle layer, Non diagonal
             else:
@@ -145,6 +158,11 @@ class BaseLinear(nn.Module):
                         add_t_ = block_2x2 if add_t_ == None else torch.block_diag(add_t_, block_2x2)
                         ind_param_start += 4
                     self.neuron.add_t = torch.nn.Parameter(add_t_)
+        
+        ### RESHAPE BASE AND LEAK
+        if self.adaptive and self.adapt_share_baseleak_t:
+            self.neuron.base_t = torch.nn.Parameter(torch.flatten(torch.stack((self.neuron.base_t,self.neuron.base_t),dim=1)))
+            self.neuron.leak_t = torch.nn.Parameter(torch.flatten(torch.stack((self.neuron.leak_t,self.neuron.leak_t),dim=1)))
 
 
 
@@ -187,6 +205,9 @@ class BaseRecurrentLinear(nn.Module):
         try: self.shared_leak_i = layer_setting["shared_leak_i"]
         except: self.shared_leak_i = False
 
+        try: self.w2x2_shared_cross = layer_setting["shared_2x2_weight_cross"]
+        except: self.w2x2_shared_cross = False
+
         try: self.adaptive = layer_setting["adaptive"]                      
         except: self.adaptive = False
 
@@ -195,6 +216,9 @@ class BaseRecurrentLinear(nn.Module):
 
         try: self.share_add_t = layer_setting["adapt_share_add_t"]
         except: self.share_add_t = False
+
+        try: self.adapt_share_baseleak_t = layer_setting["adapt_share_baseleak_t"]
+        except: self.adapt_share_baseleak_t = False
 
         self.bias_enabled = layer_setting["bias"]
         self.weight_and_bias_shared = layer_setting["shared_weight_and_bias"]
@@ -225,7 +249,15 @@ class BaseRecurrentLinear(nn.Module):
                 # Middle layer, Diagonal (2x2)
                 if self.w_diagonal_2x2:
                     # Middle layer, Diagonal (2x2), Shared W&B
-                    if self.weight_and_bias_shared:
+                    if self.w2x2_shared_cross:
+                        ind_param = 0
+                        self.weight = None
+                        for idx_block in range(int(self.output_size/2)):
+                            block_2x2 = torch.tensor([[self.ff.weight[ind_param], self.ff.weight[ind_param+1]],[self.ff.weight[ind_param+1], self.ff.weight[ind_param]]]) #shape [[x0, x1],[x1,x0]]
+                            self.weight = block_2x2 if self.weight == None else torch.block_diag(self.weight, block_2x2)
+                            ind_param += 2
+
+                    elif self.weight_and_bias_shared:
                         ind_param = 0
                         self.weight = None
                         for idx_block in range(int(self.output_size/2)):
@@ -252,8 +284,7 @@ class BaseRecurrentLinear(nn.Module):
 
                     # Middle layer, Diagonal (1x1), NON Shared W&B
                     else:
-                        self.weight = self.ff.weight 
-                        self.weight = torch.diag(self.weight) 
+                        self.weight = torch.diag(self.ff.weight) 
                 
             # Middle layer, Non diagonal
             else:
@@ -301,6 +332,11 @@ class BaseRecurrentLinear(nn.Module):
                         add_t_ = block_2x2 if add_t_ == None else torch.block_diag(add_t_, block_2x2)
                         ind_param_start += 4
                     self.neuron.add_t = torch.nn.Parameter(add_t_)
+        
+        ### RESHAPE BASE AND LEAK
+        if self.adaptive and self.adapt_share_baseleak_t:
+            self.neuron.base_t = torch.nn.Parameter(torch.flatten(torch.stack((self.neuron.base_t,self.neuron.base_t),dim=1)))
+            self.neuron.leak_t = torch.nn.Parameter(torch.flatten(torch.stack((self.neuron.leak_t,self.neuron.leak_t),dim=1)))
 
 
     def forward(self, state, input_):
