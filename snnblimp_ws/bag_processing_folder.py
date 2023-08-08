@@ -120,10 +120,10 @@ for file in all_files:
         
                 df_pid = df_pid.append(
                     {'time': ts,
-                    'u_p': u_p,
-                    'u_i': u_i,
-                    'u_d': u_d,
-                    'u_pd':u_p+u_d},
+                    'pid_p': u_p,
+                    'pid_i': u_i,
+                    'pid_d': u_d,
+                    'pid_pd':u_p+u_d},
                     ignore_index=True
                 )
     
@@ -183,34 +183,39 @@ for file in all_files:
 
     #Map the dc motor between -10 and 10 and between [10-100] to [10-15]
     lim_p = 15
-    condition = df_final["u_p"] > lim_p
-    df_final["u_p"][condition] = (df_final["u_p"][condition]-lim_p)*5/90+lim_p
+    condition = df_final["pid_p"] > lim_p
+    df_final["pid_p"][condition] = (df_final["pid_p"][condition]-lim_p)*5/90+lim_p
 
-    condition = df_final["u_p"] < -lim_p
-    df_final["u_p"][condition] = (df_final["u_p"][condition]+lim_p)*5/90-lim_p
+    condition = df_final["pid_p"] < -lim_p
+    df_final["pid_p"][condition] = (df_final["pid_p"][condition]+lim_p)*5/90-lim_p
 
 
     #Map the dc motor between -10 and 10 and between [10-100] to [10-15]
     lim_d = 15
-    condition = df_final["u_d"] > lim_d
-    df_final["u_d"][condition] = (df_final["u_d"][condition]-lim_d)*5/90+lim_d
+    condition = df_final["pid_d"] > lim_d
+    df_final["pid_d"][condition] = (df_final["pid_d"][condition]-lim_d)*5/90+lim_d
 
-    condition = df_final["u_d"] < -lim_d
-    df_final["u_d"][condition] = (df_final["u_d"][condition]+lim_d)*5/90-lim_d
-
-
-    #Map the dc motor between -10 and 10 and between [10-100] to [10-15]
-    lim_pd = 15
-    condition = df_final["u_pd"] > lim_pd
-    df_final["u_pd"][condition] =(df_final["u_pd"][condition]-lim_pd)*5/90+lim_pd
-
-    condition = df_final["u_pd"] < -lim_pd
-    df_final["u_pd"][condition] = (df_final["u_pd"][condition]+lim_pd)*5/90-lim_pd
+    condition = df_final["pid_d"] < -lim_d
+    df_final["pid_d"][condition] = (df_final["pid_d"][condition]+lim_d)*5/90-lim_d
 
 
 
 
     df_final["error"] = df_final["h_ref"] - df_final["h_meas"]
+
+    for index, row in df_final.iterrows():
+        if index ==0: df_final["pid_pd"][index] = 0
+        else: 
+            df_final["pid_pd"][index] = (df_final["error"][index] - df_final["error"][index-1])/0.2*12 + df_final["error"][index] * 10
+
+    #Map the dc motor between -10 and 10 and between [10-100] to [10-15]
+    lim_pd = 15
+    condition = df_final["pid_pd"] > lim_pd
+    df_final["pid_pd"][condition] =(df_final["pid_pd"][condition]-lim_pd)*5/90+lim_pd
+
+    condition = df_final["pid_pd"] < -lim_pd
+    df_final["pid_pd"][condition] = (df_final["pid_pd"][condition]+lim_pd)*5/90-lim_pd
+    
 
     #Get rid of the servo column
     df_final.drop(["servo"], axis=1, inplace=True)
@@ -222,7 +227,7 @@ for file in all_files:
 
 
     # remove first step which was not responding
-    # df_final = df_final.iloc[269:]
+    df_final = df_final.iloc[1200:1700]
     df_final["time"] = df_final["time"] - df_final["time"].iloc[0]
 
     # # Find the rows where the reference input changes
@@ -235,6 +240,8 @@ for file in all_files:
     #     df_final["ref_change_ind"].iloc[i] = rows_with_change[i]
     # # df_final["ref_change_ind"] = rows_with_change
 
+
+    df_final=df_final.reindex(columns=["time","dcmotor","h_ref","h_meas","pid_p","pid_i","pid_d","pid_pd","error","snn_pd","snn_i"])
 
 
     file_csv = file.split(".")[0] + ".csv"

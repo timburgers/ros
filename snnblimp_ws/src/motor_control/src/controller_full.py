@@ -31,7 +31,7 @@ from motor_control.msg import SNN_seperate
 FREQUENCY = 5.0
 MODE = "snn_pid"        #either "pid" or "snn" or "snn_sep" or "snn_pid"
 
-SNN_FULL = "228-dashing-meadow"
+SNN_FULL = "271-prime-bee"
 
 SNN_PD = "228-dashing-meadow"
 SNN_I = "247-desert-snowflake"
