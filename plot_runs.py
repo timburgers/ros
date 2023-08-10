@@ -15,18 +15,16 @@ file_names = []
 for file in os.listdir(folder_path):
     if file.endswith(".csv"):
         file_names.append(file)
+file_names = sorted(file_names)
+
 
 ind = 0
 for file in file_names:
     print(ind,") ", file)
     ind +=1
-# file_names = ["all_2023-07-28-14-06-15.csv",
-#             "all_2023-07-31-11-40-26.csv"]
-            #   "all_2023-07-28-14-09-30.csv"]
-            #   "all_2023-07-28-12-26-05.csv"]
+
 
 # Create empty lists to store each column data
-
 
 number_of_samples = []
 for file in file_names:
@@ -61,8 +59,8 @@ for file in file_names:
         integral = 0
         error_prev =0
         for row in csv_reader:
-        #    ti,ui,refi,measi,p,i,d,p_d,error,snn_pd, snn_i= row  # Unpack the row into separate variables
-           ti,ui,refi,measi,p,i,d,p_d,error= row  # Unpack the row into separate variables  
+           ti,ui,refi,measi,p,i,d,p_d,error,snn_pd, snn_i= row  # Unpack the row into separate variables
+        #    ti,ui,refi,measi,p,i,d,p_d,error= row  # Unpack the row into separate variables  
            error = float(error)
            t[row_ind,file_ind] =  ti  
            u[row_ind,file_ind] =  ui  
@@ -108,30 +106,29 @@ moving_averages = windows.mean()
 moving_averages_numpy = moving_averages.to_numpy()
 
 for i in range(len(file_names)):
-    plt.plot(t[:,i],ref[:,i])
-    plt.plot(t[:,i],meas[:,i],label = str(i))
+    plt.plot(t[:-2,i],ref[:-2,i])
+    plt.plot(t[:-2,i],meas[:-2,i],label = file_names[i])
     # plt.plot(t[:,i],ref[:,i]-meas[:,i],label = str(i))
-
-
-    # plt.plot(t[:number_of_samples[i],i],u[:number_of_samples[i],i],label = str(i))
-    # plt.plot(t[:number_of_samples[i],i],moving_averages_numpy[:number_of_samples[i],i],label = str(i)+"_filtered")
+plt.legend()
+plt.grid()
+# plt.show()
 
 plt.figure()
 for i in range(len(file_names)):
-    plt.plot(t[:number_of_samples[i],i],u_p[:number_of_samples[i],i],label = "u_p"+str(i))
+    # plt.plot(t[:number_of_samples[i],i],u_p[:number_of_samples[i],i],label = "u_p"+str(i))
     plt.plot(t[:number_of_samples[i],i],u_d[:number_of_samples[i],i],label = "u_d"+str(i))
-    plt.plot(t[:number_of_samples[i],i],u_pd[:number_of_samples[i],i],label = "u_pd"+str(i))
+    # plt.plot(t[:number_of_samples[i],i],u_pd[:number_of_samples[i],i],label = "u_pd"+str(i))
     # plt.plot(t[:number_of_samples[i],i],u_i[:number_of_samples[i],i],label = "u_i"+str(i))
     # #
     # plt.plot(t[:,i],ref[:,i]-meas[:,i],label = "ERROR")
-    plt.plot(t[:number_of_samples[i],i],snn_pd_out[:number_of_samples[i],i],label = "snn_pd"+str(i))
+    # plt.plot(t[:number_of_samples[i],i],snn_pd_out[:number_of_samples[i],i],label = "snn_pd"+str(i))
 
-    u_pd_ideal[:number_of_samples[i],i] = np.clip(u_pd_ideal[:number_of_samples[i],i],-10,10) 
-    # plt.plot(t[:number_of_samples[i],i],u_pd_ideal[:number_of_samples[i],i],label = "u_pd_ideal"+str(i))
-    # plt.plot(t[:number_of_samples[i],i],u_i_ideal[:number_of_samples[i],i],label = "u_i_ideal"+str(i))
+#     u_pd_ideal[:number_of_samples[i],i] = np.clip(u_pd_ideal[:number_of_samples[i],i],-10,10) 
+#     # plt.plot(t[:number_of_samples[i],i],u_pd_ideal[:number_of_samples[i],i],label = "u_pd_ideal"+str(i))
+#     # plt.plot(t[:number_of_samples[i],i],u_i_ideal[:number_of_samples[i],i],label = "u_i_ideal"+str(i))
 
-    mse = np.mean((u_pd_ideal[:number_of_samples[i],i]-u_pd[:number_of_samples[i],i])**2)
-    print(mse)
+#     mse = np.mean((u_pd_ideal[:number_of_samples[i],i]-u_pd[:number_of_samples[i],i])**2)
+    # print(mse)
 
 plt.grid()
 plt.legend()

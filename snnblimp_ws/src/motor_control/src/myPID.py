@@ -32,7 +32,8 @@ class PID:
         self.error_t2       = 0
         self.error_t3       = 0
         self.window_up      = 20
-        
+        self.meas_prev      = 0      
+
     
     def update_simple(self, error):
         """
@@ -144,6 +145,42 @@ class PID:
         
         return self.Kp * error, self.Ki * self.integral, self.Kd * self.derivative
     
+    
+    
+    def update_simple_h(self, error, meas):
+        """
+        PID implementation based on https://en.wikipedia.org/wiki/PID_controller#Pseudocode
+        derivative based on : https://web.media.mit.edu/~crtaylor/calculator.html
+        
+        previous_error := 0
+        integral := 0
+        
+        loop:
+            error := setpoint − measured_value
+            integral := integral + error × dt
+            derivative := (3*e(t) -4*e(t-1) + e(t-2))/ 2*dt
+            output := Kp × error + Ki × integral + Kd × derivative
+            previous_error := error
+            wait(dt)
+            goto loop
+        
+        """
+        
+        self.integral += error * self.dt
+        
+        # Saturate integral
+        if self.integral > self.window_up:
+            self.integral = self.window_up
+        elif self.integral < -self.window_up:
+            self.integral = -self.window_up
+        
+        self.derivative = (meas - self.meas_prev)/self.dt
+
+        self.meas_prev = meas
+        
+        # u = self.Kp * error + self.Ki * self.integral + self.Kd * self.derivative
+        
+        return self.Kp * error, self.Ki * self.integral, self.Kd * self.derivative
     
     
     

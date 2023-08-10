@@ -28,7 +28,7 @@ for file in all_files:
     optitrack     = True
     motor_control = True
     u_pid         = True
-    u_snn           = True
+    u_snn         = False
 
 
     bag = rosbag.Bag(bagfile)
@@ -146,17 +146,18 @@ for file in all_files:
                     ignore_index=True
                 )
         
-    df_snn.to_csv(path_or_buf= rosbag_folder + "csv/" + "snn.csv", index=False)
-    df_motor.to_csv(path_or_buf= rosbag_folder + "csv/" + "motor.csv", index=False)
-    df_ref.to_csv(path_or_buf= rosbag_folder + "csv/" + "ref.csv", index=False)
-    df_meas.to_csv(path_or_buf= rosbag_folder + "csv/" + "meas.csv", index=False)
+    # df_snn.to_csv(path_or_buf= rosbag_folder + "csv/" + "snn.csv", index=False)
+    # df_motor.to_csv(path_or_buf= rosbag_folder + "csv/" + "motor.csv", index=False)
+    # df_ref.to_csv(path_or_buf= rosbag_folder + "csv/" + "ref.csv", index=False)
+    # df_meas.to_csv(path_or_buf= rosbag_folder + "csv/" + "meas.csv", index=False)
     if h_ref and optitrack and motor_control:
         # ---> Merge previous df's by closest TIME -> df_final
         # df_final = pd.merge_asof(df_ref, df_optitrack, on="time")
         df_final = pd.merge_asof(df_motor,df_ref, on="time")
         df_final = pd.merge_asof(df_final,df_meas, on="time")
         df_final = pd.merge_asof(df_final,df_pid, on="time")
-        df_final = pd.merge_asof(df_final,df_snn, on="time")
+        if u_snn:
+            df_final = pd.merge_asof(df_final,df_snn, on="time")
 
     # elif not radar_targets and optitrack and motor_control:
     #     first_sec = int(df_optitrack["time"].iloc[0])
