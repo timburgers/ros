@@ -32,9 +32,9 @@ FREQUENCY = 10.0
 MODE = "pid"        #either "pid" or "pid_3d" or "pid_4d" or "pid_h" or "snn" or "snn_sep" or "snn_pid"
 
 # Only applicable if MODE == "pid"
-P = 5
+P = 10
 I = 0.75
-D = 6
+D = 12
 
 #Only applicable if MODE == "snn"
 SNN_FULL = "271-prime-bee"
