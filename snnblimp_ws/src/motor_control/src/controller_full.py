@@ -29,7 +29,7 @@ from motor_control.msg import SNN_seperate
 
 # Global variables:
 FREQUENCY = 20.0
-MODE = "pid"        #either "pid" or "pid_3d" or "pid_4d" or "pid_h" or "snn" or "snn_sep" or "snn_pid"
+MODE = "pid_4d"        #either "pid" or "pid_3d" or "pid_4d" or "pid_h" or "snn" or "snn_sep" or "snn_pid"
 
 # Only applicable if MODE == "pid"
 P = 10

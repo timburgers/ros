@@ -106,6 +106,7 @@ moving_averages = windows.mean()
 moving_averages_numpy = moving_averages.to_numpy()
 
 for i in range(len(file_names)):
+    plt.title("Reference and height")
     plt.plot(t[:-2,i],ref[:-2,i])
     plt.plot(t[:-2,i],meas[:-2,i],label = file_names[i])
     # plt.plot(t[:,i],ref[:,i]-meas[:,i],label = str(i))
@@ -116,32 +117,41 @@ plt.grid()
 plt.figure()
 for i in range(len(file_names)):
     plt.plot(t[:number_of_samples[i],i],u_p[:number_of_samples[i],i],label = "u_p"+str(i))
-    # plt.plot(t[:number_of_samples[i],i],u_d[:number_of_samples[i],i],label = "u_d"+str(i))
-    # plt.plot(t[:number_of_samples[i],i],u_pd[:number_of_samples[i],i],label = "u_pd"+str(i))
-    # plt.plot(t[:number_of_samples[i],i],u_i[:number_of_samples[i],i],label = "u_i"+str(i))
-    # #
-    # plt.plot(t[:,i],ref[:,i]-meas[:,i],label = "ERROR")
-    # plt.plot(t[:number_of_samples[i],i],snn_pd_out[:number_of_samples[i],i],label = "snn_pd"+str(i))
-
-#     u_pd_ideal[:number_of_samples[i],i] = np.clip(u_pd_ideal[:number_of_samples[i],i],-10,10) 
-#     # plt.plot(t[:number_of_samples[i],i],u_pd_ideal[:number_of_samples[i],i],label = "u_pd_ideal"+str(i))
-#     # plt.plot(t[:number_of_samples[i],i],u_i_ideal[:number_of_samples[i],i],label = "u_i_ideal"+str(i))
-
-#     mse = np.mean((u_pd_ideal[:number_of_samples[i],i]-u_pd[:number_of_samples[i],i])**2)
-    # print(mse)
+    plt.title("P controller")
 plt.grid()
 plt.legend()
 
 plt.figure()
 for i in range(len(file_names)):
     plt.plot(t[:number_of_samples[i],i],u_d[:number_of_samples[i],i],label = "u_d"+str(i))
+    plt.title("D controller")
 plt.grid()
 plt.legend()
 
 plt.figure()
 for i in range(len(file_names)):
     plt.plot(t[:number_of_samples[i],i],u_i[:number_of_samples[i],i],label = "u_i"+str(i))
+    plt.title("I controller")
 
 plt.grid()
 plt.legend()
 plt.show()
+
+
+
+# plt.figure()
+# for i in range(len(file_names)):
+#     plt.plot(t[:number_of_samples[i],i],u_p[:number_of_samples[i],i],label = "u_p"+str(i))
+#     # plt.plot(t[:number_of_samples[i],i],u_d[:number_of_samples[i],i],label = "u_d"+str(i))
+#     # plt.plot(t[:number_of_samples[i],i],u_pd[:number_of_samples[i],i],label = "u_pd"+str(i))
+#     # plt.plot(t[:number_of_samples[i],i],u_i[:number_of_samples[i],i],label = "u_i"+str(i))
+#     # #
+#     # plt.plot(t[:,i],ref[:,i]-meas[:,i],label = "ERROR")
+#     # plt.plot(t[:number_of_samples[i],i],snn_pd_out[:number_of_samples[i],i],label = "snn_pd"+str(i))
+
+# #     u_pd_ideal[:number_of_samples[i],i] = np.clip(u_pd_ideal[:number_of_samples[i],i],-10,10) 
+# #     # plt.plot(t[:number_of_samples[i],i],u_pd_ideal[:number_of_samples[i],i],label = "u_pd_ideal"+str(i))
+# #     # plt.plot(t[:number_of_samples[i],i],u_i_ideal[:number_of_samples[i],i],label = "u_i_ideal"+str(i))
+
+# #     mse = np.mean((u_pd_ideal[:number_of_samples[i],i]-u_pd[:number_of_samples[i],i])**2)
+#     # print(mse)
