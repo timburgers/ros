@@ -27,9 +27,10 @@ class PID:
         self.previous_error : Error at the previous timestep
         self.window_up : Saturation value for the integral term
         """
-        self.integral       = 0
-        self.previous_error       = 0
-        self.previous_derivative       = 0
+        self.integral                       = 0
+        self.previous_error                 = 0
+        self.previous_derivative            = 0
+        self.previous_previous_derivative   = 0
         self.window_up      = 20
         self.meas_prev      = 0      
 
@@ -60,9 +61,9 @@ class PID:
         elif self.integral < -self.window_up:
             self.integral = -self.window_up
         
-        self.derivative = (error - self.error_t1)/self.dt
+        self.derivative = (error - self.previous_error)/self.dt
         
-        self.error_t1 = error
+        self.previous_error = error
         
         # u = self.Kp * error + self.Ki * self.integral + self.Kd * self.derivative
         
@@ -103,12 +104,10 @@ class PID:
         self.previous_derivative = self.derivative_current
 
         
-        # u = self.Kp * error + self.Ki * self.integral + self.Kd * self.derivative
-        
         return self.Kp * error, self.Ki * self.integral, self.Kd * self.derivative
     
     
-    def update_simple_4d(self, error):
+    def update_simple_4m(self, error):
         """
         PID implementation based on https://en.wikipedia.org/wiki/PID_controller#Pseudocode
         derivative based on : https://web.media.mit.edu/~crtaylor/calculator.html
@@ -135,14 +134,14 @@ class PID:
         elif self.integral < -self.window_up:
             self.integral = -self.window_up
         
-        self.derivative = (11*error - 18*self.error_t1 + 9*self.error_t2 - 2*self.error_t3)/(6*self.dt)
+        self.current_derivative = (error - self.previous_error)/self.dt
 
-        self.error_t3 = self.error_t2
-        self.error_t2 = self.error_t1
-        self.error_t1 = error
+        self.derivative = (self.current_derivative+self.previous_derivative + self.previous_previous_derivative)/3
 
-        
-        # u = self.Kp * error + self.Ki * self.integral + self.Kd * self.derivative
+        self.previous_error = error
+        self.previous_previous_derivative = self.previous_derivative
+        self.previous_derivative = self.current_derivative
+
         
         return self.Kp * error, self.Ki * self.integral, self.Kd * self.derivative
     

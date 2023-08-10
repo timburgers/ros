@@ -29,7 +29,7 @@ from motor_control.msg import SNN_seperate
 
 # Global variables:
 FREQUENCY = 10.0
-MODE = "pid_3m"        #either "pid" or "pid_3m" or "pid_4d" or "pid_h" or "snn" or "snn_sep" or "snn_pid"
+MODE = "pid_3m"        #either "pid" or "pid_3m" or "pid_4m" or "pid_h" or "snn" or "snn_sep" or "snn_pid"
 
 # Only applicable if MODE == "pid"
 P = 10
@@ -68,7 +68,7 @@ class Controller:
         self.error = 0.0
 
         # Controllers
-        if self.mode =="pid" or self.mode=="pid_3m" or self.mode=="pid_4d" or self.mode=="pid_h":
+        if self.mode =="pid" or self.mode=="pid_3m" or self.mode=="pid_4m" or self.mode=="pid_h":
             self.pub_pid   = rospy.Publisher("/u_pid", PID_seperate, queue_size = 1,tcp_nodelay=True)
             self.pid = PID.PID(P, I, D, 1/FREQUENCY, True) # self.pid = PID.PID(P, I, D, dt, simple)
         
@@ -201,7 +201,7 @@ class Controller:
     def update_PID(self):
         if self.mode == "pid":      pe,ie,de = self.pid.update_simple(self.error)
         elif self.mode == "pid_3m": pe,ie,de = self.pid.update_simple_3m(self.error)
-        elif self.mode == "pid_4d": pe,ie,de = self.pid.update_simple_4d(self.error)
+        elif self.mode == "pid_4m": pe,ie,de = self.pid.update_simple_4m(self.error)
         elif self.mode == "pid_h":  pe,ie,de = self.pid.update_simple_h(self.error, self.h_meas)
         
         return pe,ie,de 
@@ -220,16 +220,20 @@ class Controller:
             return self.state_l2_pd, self.state_l2_i
 
     def update_command(self):
-        rospy.loginfo("h_meas = " + str(self.h_meas))
+        # rospy.loginfo("h_meas = " + str(self.h_meas))
         self.error = self.h_ref - self.h_meas
-        
+        self.h_ref_used = self.h_ref
+        self.h_meas_used = self.h_meas
+
         # Create motor command from PID
-        if self.mode == "pid" or self.mode == "pid_3m" or self.mode == "pid_4d" or self.mode =="pid_h":
+        if self.mode == "pid" or self.mode == "pid_3m" or self.mode == "pid_4m" or self.mode =="pid_h":
             pe,ie,de  = self.update_PID()
             self.pub_msg_pid = PID_seperate()
             self.pub_msg_pid.pe = pe
             self.pub_msg_pid.ie = ie
             self.pub_msg_pid.de = de
+            self.pub_msg_pid.meas = self.h_meas_used
+            self.pub_msg_pid.ref = self.h_ref_used
             u = pe + ie + de
             # for more insight in pid
             self.pub_pid.publish(self.pub_msg_pid)
@@ -269,7 +273,7 @@ class Controller:
 
 
         #Create message for the motor controller
-        self.pub_msg.ts = rospy.get_rostime()
+        # self.pub_msg.ts = rospy.get_rostime()
 
         if u >= 0:
             self.pub_msg.angle = 10
