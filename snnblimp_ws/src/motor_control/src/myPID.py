@@ -28,7 +28,9 @@ class PID:
         self.window_up : Saturation value for the integral term
         """
         self.integral       = 0
-        self.previous_error = 0
+        self.error_t1       = 0
+        self.error_t2       = 0
+        self.error_t3       = 0
         self.window_up      = 20
         
     
@@ -58,16 +60,89 @@ class PID:
         elif self.integral < -self.window_up:
             self.integral = -self.window_up
         
-        self.derivative = (error - self.previous_error)/self.dt
+        self.derivative = (error - self.error_t1)/self.dt
         
-        self.previous_error = error
+        self.error_t1 = error
+        
+        # u = self.Kp * error + self.Ki * self.integral + self.Kd * self.derivative
+        
+        return self.Kp * error, self.Ki * self.integral, self.Kd * self.derivative
+    
+    def update_simple_3d(self, error):
+        """
+        PID implementation based on https://en.wikipedia.org/wiki/PID_controller#Pseudocode
+        derivative based on : https://web.media.mit.edu/~crtaylor/calculator.html
+        
+        previous_error := 0
+        integral := 0
+        
+        loop:
+            error := setpoint − measured_value
+            integral := integral + error × dt
+            derivative := (3*e(t) -4*e(t-1) + e(t-2))/ 2*dt
+            output := Kp × error + Ki × integral + Kd × derivative
+            previous_error := error
+            wait(dt)
+            goto loop
+        
+        """
+        
+        self.integral += error * self.dt
+        
+        # Saturate integral
+        if self.integral > self.window_up:
+            self.integral = self.window_up
+        elif self.integral < -self.window_up:
+            self.integral = -self.window_up
+        
+        self.derivative = (3*error - 4*self.error_t1 + self.error_t2)/(2*self.dt)
+
+        self.error_t2 = self.error_t1
+        self.error_t1 = error
+
         
         # u = self.Kp * error + self.Ki * self.integral + self.Kd * self.derivative
         
         return self.Kp * error, self.Ki * self.integral, self.Kd * self.derivative
     
     
-    
+    def update_simple_4d(self, error):
+        """
+        PID implementation based on https://en.wikipedia.org/wiki/PID_controller#Pseudocode
+        derivative based on : https://web.media.mit.edu/~crtaylor/calculator.html
+        
+        previous_error := 0
+        integral := 0
+        
+        loop:
+            error := setpoint − measured_value
+            integral := integral + error × dt
+            derivative := (3*e(t) -4*e(t-1) + e(t-2))/ 2*dt
+            output := Kp × error + Ki × integral + Kd × derivative
+            previous_error := error
+            wait(dt)
+            goto loop
+        
+        """
+        
+        self.integral += error * self.dt
+        
+        # Saturate integral
+        if self.integral > self.window_up:
+            self.integral = self.window_up
+        elif self.integral < -self.window_up:
+            self.integral = -self.window_up
+        
+        self.derivative = (11*error - 18*self.error_t1 + 9*self.error_t2 - 2*self.error_t3)/(6*self.dt)
+
+        self.error_t3 = self.error_t2
+        self.error_t2 = self.error_t1
+        self.error_t1 = error
+
+        
+        # u = self.Kp * error + self.Ki * self.integral + self.Kd * self.derivative
+        
+        return self.Kp * error, self.Ki * self.integral, self.Kd * self.derivative
     
     
     

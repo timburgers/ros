@@ -29,10 +29,17 @@ from motor_control.msg import SNN_seperate
 
 # Global variables:
 FREQUENCY = 5.0
-MODE = "snn_pid"        #either "pid" or "snn" or "snn_sep" or "snn_pid"
+MODE = "pid"        #either "pid" or "pid_3d" or "pid_4d" or "snn" or "snn_sep" or "snn_pid"
 
+# Only applicable if MODE == "pid"
+P = 10
+I = 0.75
+D = 12
+
+#Only applicable if MODE == "snn"
 SNN_FULL = "271-prime-bee"
 
+#Only applicable if MODE == "ssn_sep" or "snn_pid" NOTE: when using snn_pid, know which one to use as snn and as pid in code
 SNN_PD = "228-dashing-meadow"
 SNN_I = "247-desert-snowflake"
 
@@ -61,9 +68,9 @@ class Controller:
         self.error = 0.0
 
         # Controllers
-        if self.mode =="pid":
+        if self.mode =="pid" or self.mode=="pid_3d" or self.mode=="pid_4d":
             self.pub_pid   = rospy.Publisher("/u_pid", PID_seperate, queue_size = 1,tcp_nodelay=True)
-            self.pid = PID.PID(10, 0.75, 12, 1/FREQUENCY, True) # self.pid = PID.PID(P, I, D, dt, simple)
+            self.pid = PID.PID(P, I, D, 1/FREQUENCY, True) # self.pid = PID.PID(P, I, D, dt, simple)
         
         elif self.mode == "snn":
             self.pub_snn   = rospy.Publisher("/u_snn", Float32, queue_size = 1, tcp_nodelay=True)
@@ -116,8 +123,6 @@ class Controller:
         if self.enc_lay_enabled: self.state_l0      = torch.zeros(self.controller.l0.neuron.state_size, 1, self.controller.l1_input)
         self.state_l1                               = torch.zeros(self.controller.l1.neuron.state_size, 1, self.controller.neurons) 
         self.state_l2                               = torch.zeros(self.controller.l2.neuron.state_size,1)
-
-
 
     def init_SNN_model_sep(self, pd_contr, i_contr):
         # Unpack the selected .pkl file 
@@ -187,7 +192,6 @@ class Controller:
         self.state_l2_i      = torch.zeros(self.controller_i.l2.neuron.state_size,1)
 
 
-
     def callback_h_ref(self, msg):
         self.h_ref = msg.data
 
@@ -195,7 +199,10 @@ class Controller:
         self.h_meas = msg.data
 
     def update_PID(self):
-        pe,ie,de = self.pid.update_simple(self.error)
+        if self.mode == "pid":      pe,ie,de = self.pid.update_simple(self.error)
+        elif self.mode == "pid_3d": pe,ie,de = self.pid.update_simple_3d(self.error)
+        elif self.mode == "pid_4d": pe,ie,de = self.pid.update_simple_4d(self.error)
+        
         return pe,ie,de 
 
     def update_SNN(self):
@@ -216,7 +223,7 @@ class Controller:
         self.error = self.h_ref - self.h_meas
         
         # Create motor command from PID
-        if self.mode == "pid":
+        if self.mode == "pid" or self.mode == "pid_3d" or self.mode == "pid_4d":
             pe,ie,de  = self.update_PID()
             self.pub_msg_pid = PID_seperate()
             self.pub_msg_pid.pe = pe

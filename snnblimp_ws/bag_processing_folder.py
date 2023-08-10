@@ -146,8 +146,10 @@ for file in all_files:
                     ignore_index=True
                 )
         
-
-
+    df_snn.to_csv(path_or_buf= rosbag_folder + "csv/" + "snn.csv", index=False)
+    df_motor.to_csv(path_or_buf= rosbag_folder + "csv/" + "motor.csv", index=False)
+    df_ref.to_csv(path_or_buf= rosbag_folder + "csv/" + "ref.csv", index=False)
+    df_meas.to_csv(path_or_buf= rosbag_folder + "csv/" + "meas.csv", index=False)
     if h_ref and optitrack and motor_control:
         # ---> Merge previous df's by closest TIME -> df_final
         # df_final = pd.merge_asof(df_ref, df_optitrack, on="time")
@@ -227,8 +229,8 @@ for file in all_files:
 
 
     # remove first step which was not responding
-    df_final = df_final.iloc[1200:1700]
-    df_final["time"] = df_final["time"] - df_final["time"].iloc[0]
+    # df_final = df_final.iloc[1200:1700]
+    # df_final["time"] = df_final["time"] - df_final["time"].iloc[0]
 
     # # Find the rows where the reference input changes
     # mask = df_final['h_ref'] != df_final['h_ref'].shift()

@@ -8,7 +8,7 @@ from motor_control.msg import MotorCommand
 import roslaunch
 
 
-MODE = "random"       # either "list" or "random"
+MODE = "list"       # either "list" or "random"
 
 def get_sec(time_str):
     h, m, s = time_str.split(':')
@@ -31,9 +31,9 @@ if __name__ == '__main__':
 
     if MODE == "list":
         # Parameters
-        frequency = 0.03                     # [Hz]
-        # h_ref_list = [1.0,0.5,1.0,0.5,1.0] 
-        h_ref_list = [1.0,1.2,1.4,1.6,1.8]    
+        frequency = 0.04                     # [Hz]
+        h_ref_list = [1.0,0.5,1.0,0.5,1.0]  #standard
+        # h_ref_list = [1.0,1.2,0.5,0.9,1.5,0.4]    
 
         ### running Node
         ind = 0
