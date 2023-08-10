@@ -200,7 +200,7 @@ class Controller:
 
     def update_PID(self):
         if self.mode == "pid":      pe,ie,de = self.pid.update_simple(self.error)
-        elif self.mode == "pid_3m": pe,ie,de = self.pid.update_simple_3d(self.error)
+        elif self.mode == "pid_3m": pe,ie,de = self.pid.update_simple_3m(self.error)
         elif self.mode == "pid_4d": pe,ie,de = self.pid.update_simple_4d(self.error)
         elif self.mode == "pid_h":  pe,ie,de = self.pid.update_simple_h(self.error, self.h_meas)
         
