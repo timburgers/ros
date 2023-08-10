@@ -174,7 +174,7 @@ class PID:
         elif self.integral < -self.window_up:
             self.integral = -self.window_up
         
-        self.derivative = (meas - self.meas_prev)/self.dt
+        self.derivative = -(meas - self.meas_prev)/self.dt
 
         self.meas_prev = meas
         
