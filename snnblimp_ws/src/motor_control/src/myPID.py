@@ -28,9 +28,8 @@ class PID:
         self.window_up : Saturation value for the integral term
         """
         self.integral       = 0
-        self.error_t1       = 0
-        self.error_t2       = 0
-        self.error_t3       = 0
+        self.previous_error       = 0
+        self.previous_derivative       = 0
         self.window_up      = 20
         self.meas_prev      = 0      
 
@@ -69,7 +68,7 @@ class PID:
         
         return self.Kp * error, self.Ki * self.integral, self.Kd * self.derivative
     
-    def update_simple_3d(self, error):
+    def update_simple_3m(self, error):
         """
         PID implementation based on https://en.wikipedia.org/wiki/PID_controller#Pseudocode
         derivative based on : https://web.media.mit.edu/~crtaylor/calculator.html
@@ -96,10 +95,12 @@ class PID:
         elif self.integral < -self.window_up:
             self.integral = -self.window_up
         
-        self.derivative = (3*error - 4*self.error_t1 + self.error_t2)/(2*self.dt)
+        self.derivative_current = (error - self.previous_error)/self.dt
 
-        self.error_t2 = self.error_t1
-        self.error_t1 = error
+        self.derivative = (self.derivative_current+self.previous_derivative)/2
+
+        self.previous_error = error
+        self.previous_derivative = self.derivative_current
 
         
         # u = self.Kp * error + self.Ki * self.integral + self.Kd * self.derivative
