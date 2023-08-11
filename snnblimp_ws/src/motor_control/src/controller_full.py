@@ -29,12 +29,12 @@ from motor_control.msg import SNN_seperate
 
 # Global variables:
 FREQUENCY = 10.0
-MODE = "pid_3m"        #either "pid" or "pid_3m" or "pid_4m" or "pid_h" or "snn" or "snn_sep" or "snn_pid"
+MODE = "pid"        #either "pid" or "pid_3m" or "pid_4m" or "pid_h" or "snn" or "snn_sep" or "snn_pid"
 
 # Only applicable if MODE == "pid"
-P = 8
-I = 0.60
-D = 10
+P = 5
+I = 0.5
+D = 5
 
 #Only applicable if MODE == "snn"
 SNN_FULL = "271-prime-bee"
