@@ -32,8 +32,8 @@ FREQUENCY = 10.0
 MODE = "pid_3m"        #either "pid" or "pid_3m" or "pid_4m" or "pid_h" or "snn" or "snn_sep" or "snn_pid"
 
 # Only applicable if MODE == "pid"
-P = 4
-I = 0.60
+P = 5
+I = 0.75
 D = 10.0
 
 #Only applicable if MODE == "snn"

@@ -31,7 +31,7 @@ class PID:
         self.previous_error                 = 0
         self.previous_derivative            = 0
         self.previous_previous_derivative   = 0
-        self.window_up      = 20
+        self.window_up      = 10
         self.meas_prev      = 0      
 
     
