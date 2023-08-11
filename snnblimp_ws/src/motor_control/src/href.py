@@ -8,7 +8,7 @@ from motor_control.msg import MotorCommand
 import roslaunch
 
 
-MODE = "list"       # either "list" or "random"
+MODE = "random"       # either "list" or "random"
 
 def get_sec(time_str):
     h, m, s = time_str.split(':')
@@ -55,7 +55,7 @@ if __name__ == '__main__':
 
     if MODE == "random":
         # Parameters
-        sim_time = "00:10:00"
+        sim_time = "00:20:00"
         height_bounds       = [0.4,   1.8]    # [m]
         frequency_bounds    = [20, 35]      # [s]
         minimal_step_size   = 0.3           # [m]
