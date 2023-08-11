@@ -34,7 +34,7 @@ MODE = "pid_3m"        #either "pid" or "pid_3m" or "pid_4m" or "pid_h" or "snn"
 # Only applicable if MODE == "pid"
 P = 7
 I = 0.75
-D = 12.0
+D = 14.0
 
 #Only applicable if MODE == "snn"
 SNN_FULL = "271-prime-bee"

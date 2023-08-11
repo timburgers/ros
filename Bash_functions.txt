@@ -3,3 +3,8 @@ scp -p delftblue:/scratch/timburgers/SNN_Workspace/Results_EA/Blimp/31-efficient
 
 scp -p delftblue:/scratch/timburgers/SNN_Workspace/Results_EA/Blimp/31-efficient-snowflake.pkl /home/tim/SNN_Workspace/Results_EA/Blimp/
 
+mv ros fatal_ros
+git clone https://github.com/timburgers/ros.git
+cp fatal_ros/snnblimp_ws/src/motor_control/src/models/spiking/spiking/torch/layers/linear.py /ros/snnblimp_ws/src/motor_control/src/models/spiking/spiking/torch/layers/linear.py
+cp fatal_ros/snnblimp_ws/src/motor_control/src/models/spiking/spiking/torch/neurons/lif.py ros/snnblimp_ws/src/motor_control/src/models/spiking/spiking/torch/neurons/lif.py 
+cp fatal_ros/snnblimp_ws/src/motor_control/src/models/spiking/spiking/torch/neurons/alif.py ros/snnblimp_ws/src/motor_control/src/models/spiking/spiking/torch/neurons/alif.py 
