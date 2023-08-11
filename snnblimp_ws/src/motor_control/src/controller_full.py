@@ -33,7 +33,7 @@ MODE = "pid_3m"        #either "pid" or "pid_3m" or "pid_4m" or "pid_h" or "snn"
 
 # Only applicable if MODE == "pid"
 P = 5
-I = 0.4
+I = 0.6
 D = 10.0
 
 #Only applicable if MODE == "snn"
