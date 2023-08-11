@@ -32,8 +32,9 @@ if __name__ == '__main__':
     if MODE == "list":
         # Parameters
         frequency = 0.04                     # [Hz]
-        h_ref_list = [1.0,0.5,1.0,0.5,1.0]  #standard
-        # h_ref_list = [1.0,1.2,0.5,0.9,1.5,0.4]    
+        # h_ref_list = [1.0,0.5,1.0,0.5,1.0]     #standard 1
+        h_ref_list = [0.5,1.0,1.5,1.0,0.5]   #standard 2
+        # h_ref_list = [1.0,1.6,1.8,2.0,2.2,.4]    
 
         ### running Node
         ind = 0
@@ -55,8 +56,8 @@ if __name__ == '__main__':
     if MODE == "random":
         # Parameters
         sim_time = "00:10:00"
-        height_bounds       = [0.4,   1.4]    # [m]
-        frequency_bounds    = [25, 35]      # [s]
+        height_bounds       = [0.4,   1.8]    # [m]
+        frequency_bounds    = [20, 35]      # [s]
         minimal_step_size   = 0.3           # [m]
         maximal_step_size   = 1.0           # [m]
         init_h_ref          = 0.8
