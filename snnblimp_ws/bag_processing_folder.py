@@ -28,7 +28,7 @@ for file in all_files:
     optitrack     = True
     motor_control = True
     u_pid         = True
-    u_snn         = False
+    u_snn         = True
 
 
     bag = rosbag.Bag(bagfile)
@@ -145,11 +145,11 @@ for file in all_files:
                     'snn_i': snn_i},
                     ignore_index=True
                 )
-    df_pid.to_csv(path_or_buf= rosbag_folder + "csv/" + "pid.csv", index=False)
-    # df_snn.to_csv(path_or_buf= rosbag_folder + "csv/" + "snn.csv", index=False)
-    df_motor.to_csv(path_or_buf= rosbag_folder + "csv/" + "motor.csv", index=False)
-    df_ref.to_csv(path_or_buf= rosbag_folder + "csv/" + "ref.csv", index=False)
-    df_meas.to_csv(path_or_buf= rosbag_folder + "csv/" + "meas.csv", index=False)
+    # df_pid.to_csv(path_or_buf= rosbag_folder + "csv/" + "pid.csv", index=False)
+    # # df_snn.to_csv(path_or_buf= rosbag_folder + "csv/" + "snn.csv", index=False)
+    # df_motor.to_csv(path_or_buf= rosbag_folder + "csv/" + "motor.csv", index=False)
+    # df_ref.to_csv(path_or_buf= rosbag_folder + "csv/" + "ref.csv", index=False)
+    # df_meas.to_csv(path_or_buf= rosbag_folder + "csv/" + "meas.csv", index=False)
     if h_ref and optitrack and motor_control:
         # ---> Merge previous df's by closest TIME -> df_final
         # df_final = pd.merge_asof(df_ref, df_optitrack, on="time")
