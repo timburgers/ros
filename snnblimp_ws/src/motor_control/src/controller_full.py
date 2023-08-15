@@ -34,12 +34,12 @@ MODE = "snn"        #either "pid" or "pid_xm" (x=[3,4]) or "pid_h" or "snn"
 # Only applicable if MODE == "pid"
 P = 0
 I = 0.1
-D = 0
+D = 12
 
 #Only applicable if MODE == "snn" NOTE: when None is specified, the other controllers will use PID
 SNN_PID = None                  # Will override the P, I and D variables
-SNN_PD = "431-soft-resonance"   # Will override the P and D varaibles
-SNN_P = None 
+SNN_PD = None   # Will override the P and D varaibles
+SNN_P = "510-ethereal-sun"
 SNN_I = None  
 SNN_D = None
 
@@ -323,7 +323,8 @@ class Controller:
         elif self.mode == "pid_4m": pe,ie,de = self.pid.update_simple_4m(self.error)
         elif self.mode == "pid_h":  pe,ie,de = self.pid.update_simple_h(self.error, self.h_meas)
         else:
-            pe,ie,de = self.pid.update_simple(self.error)
+            pe,ie,de = self.pid.update_simple_3m(self.error)
+            # pe,ie,de = self.pid.update_simple(self.error)
         
         return pe,ie,de 
 
