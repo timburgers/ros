@@ -29,7 +29,7 @@ from motor_control.msg import SNN_seperate
 
 # Global variables:
 FREQUENCY = 10.0
-MODE = "snn"        #either "pid" or "pid_xm" (x=[3,4]) or "pid_h" or "snn"
+MODE = "pid_3m"        #either "pid" or "pid_xm" (x=[3,4]) or "pid_h" or "snn"
 
 # Only applicable if MODE == "pid"
 P = 9
@@ -41,7 +41,7 @@ SNN_PID = None                  # Will override the P, I and D variables
 SNN_PD = None   # Will override the P and D varaibles
 SNN_P = None
 SNN_I = None  
-SNN_D = "460-magic-river"
+SNN_D = None
 
 
 class Controller:
