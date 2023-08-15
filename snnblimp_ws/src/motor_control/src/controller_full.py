@@ -417,6 +417,8 @@ class Controller:
                     elif item is None and index ==2:
                         u += de
                         self.pub_msg_pid.de = de
+                
+                self.pub_pid.publish(self.pub_msg_pid)
 
         rospy.loginfo("snn msg = "+ str(self.pub_msg_snn))
         rospy.loginfo("pid msg = "+ str(self.pub_msg_pid))
