@@ -32,9 +32,9 @@ FREQUENCY = 10.0
 MODE = "snn"        #either "pid" or "pid_xm" (x=[3,4]) or "pid_h" or "snn"
 
 # Only applicable if MODE == "pid"
-P = 0
+P = 9
 I = 0.1
-D = 12
+D = 0
 
 #Only applicable if MODE == "snn" NOTE: when None is specified, the other controllers will use PID
 SNN_PID = None                  # Will override the P, I and D variables
