@@ -38,10 +38,10 @@ D = 0
 
 #Only applicable if MODE == "snn" NOTE: when None is specified, the other controllers will use PID
 SNN_PID = None                  # Will override the P, I and D variables
-SNN_PD = "445-robust-universe"   # Will override the P and D varaibles
-SNN_P = None
+SNN_PD = None  # Will override the P and D varaibles
+SNN_P = "510-ethereal-sun"
 SNN_I = None  
-SNN_D = None
+SNN_D = "460-magic-river"
 
 
 class Controller:
