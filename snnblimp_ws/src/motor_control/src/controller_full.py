@@ -29,16 +29,16 @@ from motor_control.msg import SNN_seperate
 
 # Global variables:
 FREQUENCY = 10.0
-MODE = "pid_3m"        #either "pid" or "pid_xm" (x=[3,4]) or "pid_h" or "snn"
+MODE = "snn"        #either "pid" or "pid_xm" (x=[3,4]) or "pid_h" or "snn"
 
 # Only applicable if MODE == "pid"
-P = 9
+P = 0
 I = 0.1
-D = 14
+D = 0
 
 #Only applicable if MODE == "snn" NOTE: when None is specified, the other controllers will use PID
 SNN_PID = None                  # Will override the P, I and D variables
-SNN_PD = None   # Will override the P and D varaibles
+SNN_PD = "445-robust-universe"   # Will override the P and D varaibles
 SNN_P = None
 SNN_I = None  
 SNN_D = None
