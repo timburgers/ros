@@ -26,9 +26,6 @@ class ALIF(BaseLIF):
 
         # voltage update: reset, leak, integrate
         v = self.update_reset(v, i, leak_v, s, thresh)
-        
-        if self.clamp_v == True:
-            v = torch.clamp(v, min=0)
 
         # threshold update: leak, integrate
         # new thresh for spiking

@@ -22,8 +22,7 @@ class BaseLIF(BaseNeuron):
         for p in self.neuron_params:
             assert hasattr(self, p), f"{p} not found in {self}"
 
-        self.share_leak_i = layer_setting["shared_leak_i"]
-        self.clamp_v = layer_setting["clamp_v"]
+        self.share_leak_iv = layer_setting["shared_leak_iv"]
 
         # Only relevant when adaptive lifs are used (then it caclulates t in a different way)
         try: self.adapt_thres_input_spikes = layer_setting["adapt_thres_input_spikes"]
@@ -51,9 +50,6 @@ class BaseLIF(BaseNeuron):
 
         # voltage update: leak, reset, integrate
         v = self.update_reset(v, i, leak_v, s, thresh)
-        
-        if self.clamp_v == True:
-            v = torch.clamp(v, min=0)
 
         # spike
         s = self.spike(v - thresh)

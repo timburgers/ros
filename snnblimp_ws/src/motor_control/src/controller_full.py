@@ -111,7 +111,7 @@ class Controller:
 
     def init_SNN_model(self, pkl_file):
         # Unpack the selected .pkl file 
-        pickle_in = open("/home/pi/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+pkl_file+".pkl","rb")
+        pickle_in = open("/home/tim/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+pkl_file+".pkl","rb")
         dict_solutions = pickle.load(pickle_in)
 
         #Unpack in usefull variables
@@ -145,7 +145,7 @@ class Controller:
 
     def init_SNN_model_2(self, snn_contr_1, snn_contr_2):
         # Unpack the selected .pkl file 
-        pickle_snn1 = open("/home/pi/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+snn_contr_1+".pkl","rb")
+        pickle_snn1 = open("/home/tim/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+snn_contr_1+".pkl","rb")
         dict_snn1 = pickle.load(pickle_snn1)
 
         #Unpack in usefull variables
@@ -179,7 +179,7 @@ class Controller:
     ### Init the second snn controller
 
         # Unpack the selected .pkl file 
-        pickle_snn2 = open("/home/pi/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+snn_contr_2+".pkl","rb")
+        pickle_snn2 = open("/home/tim/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+snn_contr_2+".pkl","rb")
         dict_snn2 = pickle.load(pickle_snn2)
 
         #Unpack in usefull variables
@@ -212,7 +212,7 @@ class Controller:
 
     def init_SNN_model_3(self, snn_contr_1, snn_contr_2, snn_contr_3):
         # Unpack the selected .pkl file 
-        pickle_snn1 = open("/home/pi/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+snn_contr_1+".pkl","rb")
+        pickle_snn1 = open("/home/tim/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+snn_contr_1+".pkl","rb")
         dict_snn1 = pickle.load(pickle_snn1)
 
         #Unpack in usefull variables
@@ -246,7 +246,7 @@ class Controller:
         ### INIT THE SECOND SNN CONTROLLER ###
 
         # Unpack the selected .pkl file 
-        pickle_snn2 = open("/home/pi/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+snn_contr_2+".pkl","rb")
+        pickle_snn2 = open("/home/tim/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+snn_contr_2+".pkl","rb")
         dict_snn2 = pickle.load(pickle_snn2)
 
         #Unpack in usefull variables
@@ -280,7 +280,7 @@ class Controller:
         ### INIT THE THIRD SNN CONTROLLER ###
 
         # Unpack the selected .pkl file 
-        pickle_snn3 = open("/home/pi/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+snn_contr_3+".pkl","rb")
+        pickle_snn3 = open("/home/tim/ros/snnblimp_ws/src/motor_control/src/snn_controllers/"+snn_contr_3+".pkl","rb")
         dict_snn3 = pickle.load(pickle_snn3)
 
         #Unpack in usefull variables

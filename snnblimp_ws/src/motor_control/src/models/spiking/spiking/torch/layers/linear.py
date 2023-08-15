@@ -30,8 +30,11 @@ class BaseLinear(nn.Module):
         try: self.w2x2_shared_cross = layer_setting["shared_2x2_weight_cross"]
         except: self.w2x2_shared_cross = False
 
-        try: self.shared_leak_i = layer_setting["shared_leak_i"]            
-        except: self.shared_leak_i = False
+        try: self.shared_leak_iv = layer_setting["shared_leak_iv"]            
+        except: self.shared_leak_iv = False
+
+        try: self.shared_thres = layer_setting["shared_thres"]
+        except: self.shared_thres = False
 
         try: self.adaptive = layer_setting["adaptive"]                      
         except: self.adaptive = False
@@ -135,8 +138,13 @@ class BaseLinear(nn.Module):
         self.ff.bias = torch.nn.Parameter(self.bias) if self.bias_enabled else None
 
         ### RESHAPE LEAK_I MATRIX
-        if self.shared_leak_i:
+        if self.shared_leak_iv:
             self.neuron.leak_i = torch.nn.Parameter(torch.flatten(torch.stack((self.neuron.leak_i,self.neuron.leak_i),dim=1)))
+            self.neuron.leak_v = torch.nn.Parameter(torch.flatten(torch.stack((self.neuron.leak_v,self.neuron.leak_v),dim=1)))
+        
+        ### RESHAPE THRESHOLD
+        if self.shared_thres:
+            self.neuron.thresh = torch.nn.Parameter(torch.flatten(torch.stack((self.neuron.thresh,self.neuron.thresh),dim=1)))
         
         ### RESHAPE ADD_T MATRIX
         if self.adaptive:
@@ -202,8 +210,11 @@ class BaseRecurrentLinear(nn.Module):
         try: self.w_diagonal_2x2 = layer_setting["w_diagonal_2x2"]
         except: self.w_diagonal_2x2 = False
 
-        try: self.shared_leak_i = layer_setting["shared_leak_i"]
-        except: self.shared_leak_i = False
+        try: self.shared_leak_iv = layer_setting["shared_leak_iv"]
+        except: self.shared_leak_iv = False
+
+        try: self.shared_thres = layer_setting["shared_thres"]
+        except: self.shared_thres = False
 
         try: self.w2x2_shared_cross = layer_setting["shared_2x2_weight_cross"]
         except: self.w2x2_shared_cross = False
@@ -309,9 +320,14 @@ class BaseRecurrentLinear(nn.Module):
         self.ff.bias = torch.nn.Parameter(self.bias) if self.bias_enabled else None
 
         ### RESHAPE LEAK_I MATRIX
-        if self.shared_leak_i:
+        if self.shared_leak_iv:
             self.neuron.leak_i = torch.nn.Parameter(torch.flatten(torch.stack((self.neuron.leak_i,self.neuron.leak_i),dim=1)))
-        
+            self.neuron.leak_v = torch.nn.Parameter(torch.flatten(torch.stack((self.neuron.leak_v,self.neuron.leak_v),dim=1)))
+
+        ### RESHAPE THRESHOLD
+        if self.shared_thres:
+            self.neuron.thresh = torch.nn.Parameter(torch.flatten(torch.stack((self.neuron.thresh,self.neuron.thresh),dim=1)))
+
         ### RESHAPE ADD_T MATRIX
         if self.adaptive:
             if self.adapt_2x2_connect:

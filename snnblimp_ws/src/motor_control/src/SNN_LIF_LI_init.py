@@ -176,7 +176,7 @@ def init_l1_l2(neurons,layer_set):
 
 
 	num_param_l1_bias 	= int(num_neurons_l1/2) if l1_shared_wb						else num_neurons_l1
-	num_param_l1_leaki 	= int(num_neurons_l1/2) if layer_set["l1"]["shared_leak_i"]	else num_neurons_l1 
+	num_param_l1_leak_iv= int(num_neurons_l1/2) if layer_set["l1"]["shared_leak_iv"]	else num_neurons_l1 
 	num_param_l2_wb 	= int(num_neurons_l1/2) if l2_shared_wb  					else num_neurons_l1   
 
 	num_param_l1_addt 	= int(num_neurons_l1*2) if l1_adapt_2x2						else num_neurons_l1
@@ -185,9 +185,10 @@ def init_l1_l2(neurons,layer_set):
 	num_param_l1_base_leak_t = int(num_neurons_l1/2) if l1_adapt_baseleak_share		else num_neurons_l1
 	
 	init_param["l1_thres"]	= torch.ones(num_neurons_l1).float()
-	init_param["l1_leak_v"]	= torch.ones(num_neurons_l1).float()
+	init_param["l1_leak_v"]	= torch.ones(num_param_l1_leak_iv).float()
+	init_param["l1_leak_i"]	= torch.ones(num_param_l1_leak_iv).float()
 	init_param["l2_leak"] 	= torch.ones(1).float()
-	init_param["l1_leak_i"]	= torch.ones(num_param_l1_leaki).float()
+	
 
 	if layer_set["l1"]["bias"]:
 		init_param["l1_bias"]	= torch.ones(num_param_l1_bias).float()
@@ -215,12 +216,14 @@ def init_l0_l1_l2(neurons_l1,layer_set, init_param):
 	else:  							  neurons_l0 = layer_set["l0"]["neurons"]
 	
 	num_param_l0_wb 	= int(neurons_l0/2) if layer_set["l0"]["shared_weight_and_bias"]  	else neurons_l0
-	num_param_l0_leaki 	= int(neurons_l0/2) if layer_set["l0"]["shared_leak_i"]  			else neurons_l0
+	num_param_l0_leakiv = int(neurons_l0/2) if layer_set["l0"]["shared_leak_iv"]  			else neurons_l0
+	num_param_l0_thres 	= int(neurons_l0/2) if layer_set["l0"]["shared_thres"]  			else neurons_l0
 
-	init_param["l0_thres"]	 = torch.ones(neurons_l0).float()
-	init_param["l0_leak_v"]	 = torch.ones(neurons_l0).float()
+	init_param["l0_thres"]	 = torch.ones(num_param_l0_thres).float()
 
-	init_param["l0_leak_i"]  = torch.ones(num_param_l0_leaki).float()          			
+	init_param["l0_leak_v"]	 = torch.ones(num_param_l0_leakiv).float()
+	init_param["l0_leak_i"]  = torch.ones(num_param_l0_leakiv).float()  
+
 	init_param["l0_weights"] = torch.ones(num_param_l0_wb).float()	# Shpae (out,in)
 	if layer_set["l0"]["bias"]: 
 		init_param["l0_bias"]	= torch.ones(num_param_l0_wb).float()
