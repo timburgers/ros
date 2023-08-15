@@ -32,14 +32,14 @@ FREQUENCY = 10.0
 MODE = "snn"        #either "pid" or "pid_xm" (x=[3,4]) or "pid_h" or "snn"
 
 # Only applicable if MODE == "pid"
-P = 0
+P = 9
 I = 0.1
-D = 0
+D = 14
 
 #Only applicable if MODE == "snn" NOTE: when None is specified, the other controllers will use PID
 SNN_PID = None                  # Will override the P, I and D variables
 SNN_PD = None  # Will override the P and D varaibles
-SNN_P = "510-ethereal-sun"
+SNN_P = None
 SNN_I = None  
 SNN_D = "460-magic-river"
 
@@ -420,7 +420,7 @@ class Controller:
                     elif item is None and index ==2:
                         u += de
                         self.pub_msg_pid.de = de
-                
+                self.pub_msg_pid.de = de
                 self.pub_pid.publish(self.pub_msg_pid)
 
         rospy.loginfo("snn msg = "+ str(self.pub_msg_snn))
