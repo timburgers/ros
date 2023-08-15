@@ -41,7 +41,7 @@ SNN_PID = None                  # Will override the P, I and D variables
 SNN_PD = None   # Will override the P and D varaibles
 SNN_P = None
 SNN_I = None  
-SNN_D = "473-avid-totem"
+SNN_D = "460-magic-river"
 
 
 class Controller:
