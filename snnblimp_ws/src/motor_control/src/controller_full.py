@@ -33,12 +33,12 @@ MODE = "snn"        #either "pid" or "pid_xm" (x=[3,4]) or "pid_h" or "snn"
 
 # Only applicable if MODE == "pid"
 P = 0
-I = 0
+I = 0.1
 D = 0
 
 #Only applicable if MODE == "snn" NOTE: when None is specified, the other controllers will use PID
-SNN_PID = "727-golden-meadow"                  # Will override the P, I and D variables
-SNN_PD = None  # Will override the P and D varaibles
+SNN_PID = None            # Will override the P, I and D variables
+SNN_PD = "624-peachy-fog"  # Will override the P and D varaibles
 SNN_P = None
 SNN_I = None  
 SNN_D = None

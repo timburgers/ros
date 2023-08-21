@@ -33,7 +33,7 @@ if __name__ == '__main__':
         # Parameters
         frequency = 0.04                     # [Hz]
         # h_ref_list = [1.0,0.5,1.0,0.5,1.0]     #standard 1
-        h_ref_list = [0.5,1.0,1.5,1.0,0.5]   #standard 2
+        h_ref_list = [0.3,0.5,1.0,1.5,1.0,0.5]   #standard 2
         # h_ref_list = [1.0,1.6,1.8,2.0,2.2,.4]    
 
         ### running Node
