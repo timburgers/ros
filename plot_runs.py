@@ -3,18 +3,21 @@ import numpy as np
 import csv
 import os
 import pandas as pd
+plt.rcParams["font.family"] = "Times New Roman"
+plt.rcParams.update({'font.size': 16})
  
 folder_path = "/home/tim/ros/snnblimp_ws/rosbag/new/csv/"
-Hz = 5
-Kp = 10
-Ki = 0.75
-Kd = 12
-
+Hz = 10
+Kp = 9
+Ki = 0.1
+Kd = 14
+old_layout = True
 
 plot_p = False
 plot_i = False
 plot_d = False
-plot_pd = True
+plot_pd = False
+plot_ideal = True
 
 
 file_names = []
@@ -42,17 +45,28 @@ for file in file_names:
             total_rows += 1
         number_of_samples.append(total_rows)
 
+# Init PID arrays
 t_arr = np.zeros([max(number_of_samples), len(file_names)])
-u_arr = np.zeros([max(number_of_samples), len(file_names)])
 ref_arr = np.zeros([max(number_of_samples), len(file_names)])
 meas_arr = np.zeros([max(number_of_samples), len(file_names)])
+error_arr = np.zeros([max(number_of_samples), len(file_names)])
 i_arr = np.zeros([max(number_of_samples), len(file_names)])
 p_arr = np.zeros([max(number_of_samples), len(file_names)])
 d_arr = np.zeros([max(number_of_samples), len(file_names)])
 pd_arr = np.zeros([max(number_of_samples), len(file_names)])
-u_i_ideal = np.zeros([max(number_of_samples), len(file_names)])
-u_pd_ideal = np.zeros([max(number_of_samples), len(file_names)])
-snn_pd_out = np.zeros([max(number_of_samples), len(file_names)])
+u_arr = np.zeros([max(number_of_samples), len(file_names)])
+
+# Init SNN arrays
+snn_p_arr = np.zeros([max(number_of_samples), len(file_names)])
+snn_i_arr = np.zeros([max(number_of_samples), len(file_names)])
+snn_d_arr = np.zeros([max(number_of_samples), len(file_names)])
+snn_pd_arr = np.zeros([max(number_of_samples), len(file_names)])
+snn_pid_arr = np.zeros([max(number_of_samples), len(file_names)])
+
+# Init Ideal arrays
+i_ideal_arr = np.zeros([max(number_of_samples), len(file_names)])
+d_ideal_arr = np.zeros([max(number_of_samples), len(file_names)])
+pd_ideal_arr = np.zeros([max(number_of_samples), len(file_names)])
 # snn_i_out = np.zeros([max(number_of_samples), len(file_names)])
 
 i = 0 
@@ -65,37 +79,47 @@ for file in file_names:
         integral = 0
         error_prev =0
         for row in csv_reader:
-           t,u,ref,meas,p,i,d,p_d,error,snn_pd, snn_i= row  # Unpack the row into separate variables
-        #    ti,ui,refi,measi,p,i,d,p_d,error= row  # Unpack the row into separate variables 
-        #    t,meas,ref,error,p,i,d,p_d,u= row   #New 
-           t_arr[row_ind,file_ind] =  t  
-           u_arr[row_ind,file_ind] =  u  
-           ref_arr[row_ind,file_ind] =  ref  
-           meas_arr[row_ind,file_ind] =  meas
-           i_arr[row_ind,file_ind] =  i
-           d_arr[row_ind,file_ind] = d
-           p_arr[row_ind,file_ind] = p
-           pd_arr[row_ind,file_ind] =  p_d  
-           snn_pd_out[row_ind,file_ind] = snn_pd
-        #    snn_i_out[row_ind,file_ind] = snn_i
+            
+            if old_layout == True: 
+                try: t,u,ref,meas,p,i,d,p_d,error = row
+                except: t,u,ref,meas,p,i,d,p_d,error, snn_pd,snn_i = row
+            elif len(row) == 9:       t,meas,ref,error,p,i,d,p_d,u= row 
+            elif len(row) == 14:    t,meas,ref,error,p,i,d,p_d,u, snn_p, snn_i, snn_d, snn_pd, snn_pid= row
 
+            # Fill the standard arrays
+            t_arr[row_ind,file_ind] =  t  
+            meas_arr[row_ind,file_ind] =  meas
+            ref_arr[row_ind,file_ind] =  ref  
+            error_arr[row_ind,file_ind] = error
+            p_arr[row_ind,file_ind] = p
+            i_arr[row_ind,file_ind] =  i
+            d_arr[row_ind,file_ind] = d
+            pd_arr[row_ind,file_ind] =  p_d  
+            u_arr[row_ind,file_ind] =  u  
 
+            if len(row) ==14:
+                snn_p_arr[row_ind,file_ind] =  snn_p
+                snn_i_arr[row_ind,file_ind] =  snn_i
+                snn_d_arr[row_ind,file_ind] =  snn_d
+                snn_pd_arr[row_ind,file_ind] =  snn_pd
+                snn_pid_arr[row_ind,file_ind] =  snn_pid  
 
-        #    integral =  integral + (error*(1/Hz))
-        #    u_i_ideal[row_ind,file_ind] = integral *Ki
-           error = float(error)
-           u_pd_ideal[row_ind,file_ind] = (error-error_prev)*Hz*Kd + error*Kp
-           error_prev = error
+            # Calculate the ideal responses
+            error = float(error)
+            integral =  integral + (error*(1/Hz))
+            i_ideal_arr[row_ind,file_ind] = integral *Ki
+            pd_ideal_arr[row_ind,file_ind] = (error-error_prev)*Hz*Kd + error*Kp
+            d_ideal_arr[row_ind,file_ind] = (error-error_prev)*Hz*Kd 
+            error_prev = error
 
-           row_ind +=1 
-
+            row_ind +=1 
     file_ind +=1
 
 
 
 for i in range(len(file_names)):
-    plt.title("Reference and height")
-    plt.plot(t_arr[:-2,i],ref_arr[:-2,i])
+    plt.title("SNN Controller PID (5Hz)")
+    plt.plot(t_arr[:-2,i],ref_arr[:-2,i],color = "r", linestyle="--", label="Reference")
     plt.plot(t_arr[:-2,i],meas_arr[:-2,i],label = file_names[i])
     # plt.plot(t[:,i],ref[:,i]-meas[:,i],label = str(i))
 plt.legend()
@@ -105,7 +129,8 @@ plt.grid()
 if plot_p:
     plt.figure()
     for i in range(len(file_names)):
-        plt.plot(t_arr[:number_of_samples[i],i],p_arr[:number_of_samples[i],i],label = str(i))
+        plt.plot(t_arr[:number_of_samples[i],i],p_arr[:number_of_samples[i],i],label = "pid_" +str(i))
+        plt.plot(t_arr[:number_of_samples[i],i],snn_p_arr[:number_of_samples[i],i],label ="snn_" + str(i))
         plt.title("P controller")
     plt.grid()
     plt.legend()
@@ -113,7 +138,10 @@ if plot_p:
 if plot_d:
     plt.figure()
     for i in range(len(file_names)):
-        plt.plot(t_arr[:number_of_samples[i],i],d_arr[:number_of_samples[i],i],label = str(i))
+        plt.plot(t_arr[:number_of_samples[i],i],d_arr[:number_of_samples[i],i],label = "pid_" + str(i))
+        plt.plot(t_arr[:number_of_samples[i],i],snn_d_arr[:number_of_samples[i],i],label ="snn_" + str(i))
+        if plot_ideal:
+            plt.plot(t_arr[:number_of_samples[i],i],d_ideal_arr[:number_of_samples[i],i],label = "ideal_"+str(i))
         plt.title("D controller")
     plt.grid()
     plt.legend()
@@ -121,9 +149,10 @@ if plot_d:
 if plot_pd:
     plt.figure()
     for i in range(len(file_names)):
-        plt.plot(t_arr[:-2,i],(ref_arr[:-2,i]- meas_arr[:-2,i])*10,label = "error")
-        plt.plot(t_arr[:number_of_samples[i],i],snn_pd_out[:number_of_samples[i],i],label = "actual_" + str(i))
-        plt.plot(t_arr[:number_of_samples[i],i],u_pd_ideal[:number_of_samples[i],i],label = "ideal_"+str(i))
+        plt.plot(t_arr[:-2,i],(ref_arr[:-2,i]- meas_arr[:-2,i]),label = "error")
+        plt.plot(t_arr[:number_of_samples[i],i],snn_pd_arr[:number_of_samples[i],i],label = "snn_" + str(i))
+        if plot_ideal:
+            plt.plot(t_arr[:number_of_samples[i],i],pd_ideal_arr[:number_of_samples[i],i],label = "ideal_"+str(i))
         plt.title("PD controller")
     plt.grid()
     plt.legend()
@@ -131,7 +160,10 @@ if plot_pd:
 if plot_i:
     plt.figure()
     for i in range(len(file_names)):
-        plt.plot(t_arr[:number_of_samples[i],i],i_arr[:number_of_samples[i],i],label = str(i))
+        plt.plot(t_arr[:number_of_samples[i],i],i_arr[:number_of_samples[i],i],label = "pid_" +str(i))
+        plt.plot(t_arr[:number_of_samples[i],i],snn_d_arr[:number_of_samples[i],i],label ="snn_" + str(i))
+        if plot_ideal:
+            plt.plot(t_arr[:number_of_samples[i],i],i_ideal_arr[:number_of_samples[i],i],label = "ideal_"+str(i))
         plt.title("I controller")
     plt.grid()
     plt.legend()

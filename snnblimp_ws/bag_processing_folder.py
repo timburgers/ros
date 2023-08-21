@@ -7,7 +7,7 @@ from os import listdir
 import numpy as np
 import os
 
-rosbag_folder = "/home/tim/ros/snnblimp_ws/rosbag/new/"
+rosbag_folder = "/home/tim/ros/snnblimp_ws/rosbag/interest/"
 if os.path.isdir(rosbag_folder + "csv"): pass
 else: os.mkdir(rosbag_folder + "csv")
 

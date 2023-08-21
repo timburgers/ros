@@ -1,7 +1,7 @@
 scp -p delftblue:/scratch/timburgers/SNN_Workspace/Results_EA/Blimp/31-efficient-snowflake.pkl /home/tim/ros/snnblimp_ws/src/motor_control/src/snn_controllers
 
 
-scp -p delftblue:/scratch/timburgers/SNN_Workspace/Results_EA/Blimp/31-efficient-snowflake.pkl /home/tim/SNN_Workspace/Results_EA/Blimp/
+scp -p delftblue:/scratch/timburgers/SNN_Workspace/Results_EA/Blimp/464-jolly-leaf.pkl /home/tim/SNN_Workspace/Results_EA/Blimp/
 
 mv ros fatal_ros &&
 git clone https://github.com/timburgers/ros.git &&
