@@ -8,7 +8,7 @@ from motor_control.msg import MotorCommand
 import roslaunch
 
 
-MODE = "random"       # either "list" or "random"
+MODE = "list"       # either "list" or "random"
 
 def get_sec(time_str):
     h, m, s = time_str.split(':')
