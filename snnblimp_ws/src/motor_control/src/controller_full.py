@@ -369,7 +369,7 @@ class Controller:
             self.pub_msg_snn = SNN_seperate()
 
             u1, u2, u3 = self.update_SNN(self.num_snn_controller)
-            u = u1 + u2 + u3
+            u = u1 + u2*7.5 + u3
 
             ### Create SNN msgs
             #Case 1) SNN is full PID
@@ -380,7 +380,7 @@ class Controller:
             if SNN_PD != None:
                 self.pub_msg_snn.snn_pd = u1
                 if SNN_I != None:
-                    self.pub_msg_snn.snn_i = u2
+                    self.pub_msg_snn.snn_i = u2*7.5
             
             #Case 3) SNN is one or more of the PID seperately
             if SNN_PID ==None and SNN_PD== None:
