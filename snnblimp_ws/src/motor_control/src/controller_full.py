@@ -39,7 +39,7 @@ D = 0
 SNN_PID = None          # Will override the P, I and D variables
 SNN_PD = "858-genial-mountain" # Will override the P and D varaibles
 SNN_P = None
-SNN_I = "803-neat-pond"
+SNN_I = None
 SNN_D = None
 
 
