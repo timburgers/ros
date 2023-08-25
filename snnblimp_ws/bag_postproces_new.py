@@ -89,7 +89,8 @@ for file in all_files:
                 ignore_index=True
             )
 
-    df_final = pd.merge_asof(df_final,df_snn, on="time")
+    if not df_snn.empty:
+        df_final = pd.merge_asof(df_final,df_snn, on="time")
 
     #Map the dc motor between -10 and 10 and between [10-100] to [10-15]
     if limit_u:
