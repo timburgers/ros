@@ -36,7 +36,7 @@ I = 0
 D = 0
 
 #Only applicable if MODE == "snn" NOTE: when None is specified, the other controllers will use PID
-SNN_PID = "838-tough-moon"            # Will override the P, I and D variables
+SNN_PID = "834-olive-spaceship"            # Will override the P, I and D variables
 SNN_PD = None # Will override the P and D varaibles
 SNN_P = None
 SNN_I = None
