@@ -14,9 +14,9 @@ Kd = 14
 old_layout = False
 
 plot_p = False
-plot_i = False
+plot_i = True
 plot_d = False
-plot_pd = False
+plot_pd = True
 plot_ideal = True
 
 
@@ -165,7 +165,7 @@ if plot_i:
     plt.figure()
     for i in range(len(file_names)):
         plt.plot(t_arr[:number_of_samples[i],i],i_arr[:number_of_samples[i],i],label = "pid_" +str(i))
-        plt.plot(t_arr[:number_of_samples[i],i],snn_d_arr[:number_of_samples[i],i],label ="snn_" + str(i))
+        plt.plot(t_arr[:number_of_samples[i],i],snn_i_arr[:number_of_samples[i],i],label ="snn_" + str(i))
         if plot_ideal:
             plt.plot(t_arr[:number_of_samples[i],i],i_ideal_arr[:number_of_samples[i],i],label = "ideal_"+str(i))
         plt.title("I controller")
