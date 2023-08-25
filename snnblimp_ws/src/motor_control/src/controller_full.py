@@ -28,16 +28,15 @@ from motor_control.msg import PID_seperate
 from motor_control.msg import SNN_seperate
 
 # Global variables:
-FREQUENCY = 5.0
+FREQUENCY = 10.0
 MODE = "snn"        #either "pid" or "pid_xm" (x=[3,4]) or "pid_h" or "snn"
 
-# Only applicable if MODE == "pid"
 P = 0
 I = 0
 D = 0
 
 #Only applicable if MODE == "snn" NOTE: when None is specified, the other controllers will use PID
-SNN_PID = "728-legendary-universe"            # Will override the P, I and D variables
+SNN_PID = "839-skilled-jazz"            # Will override the P, I and D variables
 SNN_PD = None # Will override the P and D varaibles
 SNN_P = None
 SNN_I = None
@@ -74,6 +73,7 @@ class Controller:
         
         elif self.mode == "snn":
             self.pub_snn   = rospy.Publisher("/u_snn", SNN_seperate, queue_size = 1, tcp_nodelay=True)
+            self.pub_pid   = rospy.Publisher("/u_pid", PID_seperate, queue_size = 1,tcp_nodelay=True)
 
             self.snn_p = SNN_P
             self.snn_i = SNN_I
@@ -102,7 +102,6 @@ class Controller:
 
             # This means that atleast one of the PID parameters, need to be run without SNN and with PID
             if None in self.SNN_FILES:
-                self.pub_pid   = rospy.Publisher("/u_pid", PID_seperate, queue_size = 1,tcp_nodelay=True)
                 self.pid = PID.PID(P, I, D, 1/FREQUENCY, True) # self.pid = PID.PID(P, I, D, dt, simple)
 
 
@@ -401,13 +400,13 @@ class Controller:
                         ind_snn_cont +=1
             self.pub_snn.publish(self.pub_msg_snn)
 
+            self.pub_msg_pid = PID_seperate()
+            self.pub_msg_pid.meas = self.h_meas_used
+            self.pub_msg_pid.ref = self.h_ref_used  
+
             # If there is also a PID required
             if None in self.SNN_FILES:
                 pe,ie,de  = self.update_PID()
-                self.pub_msg_pid = PID_seperate()
-                self.pub_msg_pid.meas = self.h_meas_used
-                self.pub_msg_pid.ref = self.h_ref_used  
-                
                 for index, item in enumerate(self.SNN_FILES):
                     if item is None and index ==0:
                         u += pe
@@ -421,10 +420,11 @@ class Controller:
                         u += de
                         self.pub_msg_pid.de = de
                 self.pub_msg_pid.de = de
-                self.pub_pid.publish(self.pub_msg_pid)
+            
+            self.pub_pid.publish(self.pub_msg_pid)
 
-        rospy.loginfo("snn msg = "+ str(self.pub_msg_snn))
-        rospy.loginfo("pid msg = "+ str(self.pub_msg_pid))
+        # rospy.loginfo("snn msg = "+ str(self.pub_msg_snn))
+        # rospy.loginfo("pid msg = "+ str(self.pub_msg_pid))
             
 
         #Create message for the motor controller

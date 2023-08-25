@@ -67,33 +67,29 @@ for file in all_files:
         
         column_names_snn = ['snn_p','snn_i','snn_d','snn_pd','snn_pid']
         df_snn = pd.DataFrame(columns=column_names_snn)
+        
 
         for topic, msg, t in bag.read_messages(topics='/u_snn'):
             #convert the messages into variables
-            # snn_p = msg.snn_p
+            snn_p = msg.snn_p
             snn_i = msg.snn_i
-            # snn_d = msg.snn_d
+            snn_d = msg.snn_d
             snn_pd  = msg.snn_pd
-            # snn_pid = msg.snn_pid
+            snn_pid = msg.snn_pid
             ts = t.to_sec()
         
         
             df_snn = df_snn.append(
                 {'time': ts,
-                # 'snn_p': snn_p,
+                'snn_p': snn_p,
                 'snn_i':snn_i,
-                # 'snn_d': snn_d,
-                'snn_pd': snn_pd},
-                # 'snn_pid': snn_pid},
+                'snn_d': snn_d,
+                'snn_pd': snn_pd,
+                'snn_pid': snn_pid},
                 ignore_index=True
             )
-        
-        #Merge the two datasets
-        df_final = pd.merge_asof(df_final,df_snn, on="time")
 
-    #If it is an empty recording skip it
-    if df_final.empty:
-        continue
+    df_final = pd.merge_asof(df_final,df_snn, on="time")
 
     #Map the dc motor between -10 and 10 and between [10-100] to [10-15]
     if limit_u:
@@ -130,7 +126,7 @@ for file in all_files:
 
         condition = df_final["pid_pd"] < -lim_pd
         df_final["pid_pd"][condition] = (df_final["pid_pd"][condition]+lim_pd)*5/90-lim_pd
-    
+                
 
 
     df_final.dropna(inplace=True)

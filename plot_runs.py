@@ -11,7 +11,7 @@ Hz = 10
 Kp = 9
 Ki = 0.1
 Kd = 14
-old_layout = True
+old_layout = False
 
 plot_p = False
 plot_i = False
@@ -83,6 +83,10 @@ for file in file_names:
             if old_layout == True: 
                 try: t,u,ref,meas,p,i,d,p_d,error = row
                 except: t,u,ref,meas,p,i,d,p_d,error, snn_pd,snn_i = row
+            elif len(row) == 6:     
+                snn_p, snn_i, snn_d, snn_pd, snn_pid, t = row
+                meas= 0 ;ref = 0; error=0;p=0;i=0;d=0;p_d=0;u = 0
+
             elif len(row) == 9:       t,meas,ref,error,p,i,d,p_d,u= row 
             elif len(row) == 14:    t,meas,ref,error,p,i,d,p_d,u, snn_p, snn_i, snn_d, snn_pd, snn_pid= row
 
@@ -116,10 +120,9 @@ for file in file_names:
     file_ind +=1
 
 
-
+plt.plot(t_arr[:-2,0],ref_arr[:-2,0],color = "r", linestyle="--", label="Reference")
 for i in range(len(file_names)):
-    plt.title("SNN Controller PID (5Hz)")
-    plt.plot(t_arr[:-2,i],ref_arr[:-2,i],color = "r", linestyle="--", label="Reference")
+    plt.title("SNN Controller PID (10Hz)")
     plt.plot(t_arr[:-2,i],meas_arr[:-2,i],label = file_names[i])
     # plt.plot(t[:,i],ref[:,i]-meas[:,i],label = str(i))
 plt.legend()
@@ -131,6 +134,7 @@ if plot_p:
     for i in range(len(file_names)):
         plt.plot(t_arr[:number_of_samples[i],i],p_arr[:number_of_samples[i],i],label = "pid_" +str(i))
         plt.plot(t_arr[:number_of_samples[i],i],snn_p_arr[:number_of_samples[i],i],label ="snn_" + str(i))
+        plt.plot(t_arr[:number_of_samples[i],i],error_arr[:number_of_samples[i],i]*(Kp-1),label ="ideal_" + str(i))
         plt.title("P controller")
     plt.grid()
     plt.legend()
