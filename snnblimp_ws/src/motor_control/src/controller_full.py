@@ -160,6 +160,9 @@ class Controller:
         best_sol_ind_snn1 = np.argmin(solutions_error_snn1)
         self.solution_snn1 = test_solutions_snn1[best_sol_ind_snn1+1] #+1 since first of solution_testrun is only zeros
 
+        try: _ = config_snn1["LAYER_SETTING"]["l1"]["recurrent_2x2"]
+        except: config_snn1["LAYER_SETTING"]["l1"]["recurrent_2x2"] = False
+
         # Initiailize the SNN model (only structure, not weights)
         if config_snn1["LAYER_SETTING"]["l0"]["enabled"]: self.controller_snn1 = Encoding_L1_Decoding_SNN(None, config_snn1["NEURONS"], config_snn1["LAYER_SETTING"])
         else:                                           self.controller_snn1 = L1_Decoding_SNN(None, config_snn1["NEURONS"], config_snn1["LAYER_SETTING"])
@@ -193,6 +196,9 @@ class Controller:
         # Select the best performing (lowest test error) in the network
         best_sol_ind_snn2 = np.argmin(solutions_error_snn2)
         self.solution_snn2 = test_solutions_snn2[best_sol_ind_snn2+1] #+1 since first of solution_testrun is only zeros
+
+        try: _ = config_snn2["LAYER_SETTING"]["l1"]["recurrent_2x2"]
+        except: config_snn2["LAYER_SETTING"]["l1"]["recurrent_2x2"] = False
 
         # Initiailize the SNN model (only structure, not weights)
         if config_snn2["LAYER_SETTING"]["l0"]["enabled"]: self.controller_snn2 = Encoding_L1_Decoding_SNN(None, config_snn2["NEURONS"], config_snn2["LAYER_SETTING"])
