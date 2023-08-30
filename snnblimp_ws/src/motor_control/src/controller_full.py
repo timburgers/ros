@@ -37,7 +37,7 @@ D = 0
 
 #Only applicable if MODE == "snn" NOTE: when None is specified, the other controllers will use PID
 SNN_PID = None          # Will override the P, I and D variables
-SNN_PD = "939-effortless-snowball" # Will override the P and D varaibles
+SNN_PD = "858-genial-mountain" # Will override the P and D varaibles
 SNN_P = None
 SNN_I = None
 SNN_D = None
@@ -121,7 +121,7 @@ class Controller:
 
         try: _ = config["LAYER_SETTING"]["l1"]["recurrent_2x2"]
         except: config["LAYER_SETTING"]["l1"]["recurrent_2x2"] = False
-        
+
         # Select the best performing (lowest test error) in the network
         best_sol_ind = np.argmin(solutions_error)
         self.solution = test_solutions[best_sol_ind+1] #+1 since first of solution_testrun is only zeros
