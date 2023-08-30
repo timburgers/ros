@@ -119,6 +119,9 @@ class Controller:
         solutions_error      = dict_solutions["error"]              #All errors of the test solutions
         config               = dict_solutions["config"]             #Configfile set for the evolution of the network
 
+        try: _ = config["LAYER_SETTING"]["l1"]["recurrent_2x2"]
+        except: config["LAYER_SETTING"]["l1"]["recurrent_2x2"] = False
+        
         # Select the best performing (lowest test error) in the network
         best_sol_ind = np.argmin(solutions_error)
         self.solution = test_solutions[best_sol_ind+1] #+1 since first of solution_testrun is only zeros
