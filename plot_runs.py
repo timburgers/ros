@@ -13,12 +13,15 @@ Ki = 0.1
 Kd = 14
 old_layout = False
 
-plot_p = False
-plot_i = True
-plot_d = False
-plot_pd = True
-plot_ideal = True
+start_second = 50
+end_second = None
 
+plot_p = False
+plot_i = False
+plot_d = False
+plot_pd = False
+plot_ideal = True
+plot_u = False
 
 file_names = []
 for file in os.listdir(folder_path):
@@ -68,6 +71,10 @@ i_ideal_arr = np.zeros([max(number_of_samples), len(file_names)])
 d_ideal_arr = np.zeros([max(number_of_samples), len(file_names)])
 pd_ideal_arr = np.zeros([max(number_of_samples), len(file_names)])
 # snn_i_out = np.zeros([max(number_of_samples), len(file_names)])
+
+#Set the start and end point is None is used
+if start_second ==None: start_second = 0
+if end_second == None: end_second =int(max(number_of_samples)/Hz)-Hz
 
 i = 0 
 file_ind = 0
@@ -120,10 +127,14 @@ for file in file_names:
     file_ind +=1
 
 
-plt.plot(t_arr[:-2,0],ref_arr[:-2,0],color = "r", linestyle="--", label="Reference")
+plt.plot(t_arr[start_second*Hz:end_second*Hz,0],ref_arr[start_second*Hz:end_second*Hz,0],color = "r", linestyle="--", label="Reference")
+plt.title("SNN Controller PID (10Hz)")
 for i in range(len(file_names)):
-    plt.title("SNN Controller PID (10Hz)")
-    plt.plot(t_arr[:-2,i],meas_arr[:-2,i],label = file_names[i])
+    if file_names[i] == "PID.csv":
+        plt.plot(t_arr[start_second*Hz:end_second*Hz,i],meas_arr[start_second*Hz:end_second*Hz,i],label = file_names[i].split(".")[0], color = "k", linewidth=3)
+    
+    else:
+        plt.plot(t_arr[start_second*Hz:end_second*Hz,i],meas_arr[start_second*Hz:end_second*Hz,i],label = file_names[i].split(".")[0])
     # plt.plot(t[:,i],ref[:,i]-meas[:,i],label = str(i))
 plt.legend()
 plt.grid()
@@ -132,9 +143,9 @@ plt.grid()
 if plot_p:
     plt.figure()
     for i in range(len(file_names)):
-        plt.plot(t_arr[:number_of_samples[i],i],p_arr[:number_of_samples[i],i],label = "pid_" +str(i))
-        plt.plot(t_arr[:number_of_samples[i],i],snn_p_arr[:number_of_samples[i],i],label ="snn_" + str(i))
-        plt.plot(t_arr[:number_of_samples[i],i],error_arr[:number_of_samples[i],i]*(Kp-1),label ="ideal_" + str(i))
+        plt.plot(t_arr[start_second*Hz:end_second*Hz,i],p_arr[start_second*Hz:end_second*Hz,i],label = "pid_" +str(i))
+        plt.plot(t_arr[start_second*Hz:end_second*Hz,i],snn_p_arr[start_second*Hz:end_second*Hz,i],label ="snn_" + str(i))
+        plt.plot(t_arr[start_second*Hz:end_second*Hz,i],error_arr[start_second*Hz:end_second*Hz,i]*(Kp),label ="ideal_" + str(i))
         plt.title("P controller")
     plt.grid()
     plt.legend()
@@ -142,10 +153,10 @@ if plot_p:
 if plot_d:
     plt.figure()
     for i in range(len(file_names)):
-        plt.plot(t_arr[:number_of_samples[i],i],d_arr[:number_of_samples[i],i],label = "pid_" + str(i))
-        plt.plot(t_arr[:number_of_samples[i],i],snn_d_arr[:number_of_samples[i],i],label ="snn_" + str(i))
+        plt.plot(t_arr[start_second*Hz:end_second*Hz,i],d_arr[start_second*Hz:end_second*Hz,i],label = "pid_" + str(i))
+        plt.plot(t_arr[start_second*Hz:end_second*Hz,i],snn_d_arr[start_second*Hz:end_second*Hz,i],label ="snn_" + str(i))
         if plot_ideal:
-            plt.plot(t_arr[:number_of_samples[i],i],d_ideal_arr[:number_of_samples[i],i],label = "ideal_"+str(i))
+            plt.plot(t_arr[start_second*Hz:end_second*Hz,i],d_ideal_arr[start_second*Hz:end_second*Hz,i],label = "ideal_"+str(i))
         plt.title("D controller")
     plt.grid()
     plt.legend()
@@ -154,9 +165,9 @@ if plot_pd:
     plt.figure()
     for i in range(len(file_names)):
         plt.plot(t_arr[:-2,i],(ref_arr[:-2,i]- meas_arr[:-2,i]),label = "error")
-        plt.plot(t_arr[:number_of_samples[i],i],snn_pd_arr[:number_of_samples[i],i],label = "snn_" + str(i))
+        plt.plot(t_arr[start_second*Hz:end_second*Hz,i],snn_pd_arr[start_second*Hz:end_second*Hz,i],label = "snn_" + str(i))
         if plot_ideal:
-            plt.plot(t_arr[:number_of_samples[i],i],pd_ideal_arr[:number_of_samples[i],i],label = "ideal_"+str(i))
+            plt.plot(t_arr[start_second*Hz:end_second*Hz,i],pd_ideal_arr[start_second*Hz:end_second*Hz,i],label = "ideal_"+str(i))
         plt.title("PD controller")
     plt.grid()
     plt.legend()
@@ -164,11 +175,19 @@ if plot_pd:
 if plot_i:
     plt.figure()
     for i in range(len(file_names)):
-        plt.plot(t_arr[:number_of_samples[i],i],i_arr[:number_of_samples[i],i],label = "pid_" +str(i))
-        plt.plot(t_arr[:number_of_samples[i],i],snn_i_arr[:number_of_samples[i],i],label ="snn_" + str(i))
+        plt.plot(t_arr[start_second*Hz:end_second*Hz,i],i_arr[start_second*Hz:end_second*Hz,i],label = "pid_" +str(i))
+        plt.plot(t_arr[start_second*Hz:end_second*Hz,i],snn_i_arr[start_second*Hz:end_second*Hz,i],label ="snn_" + str(i))
         if plot_ideal:
-            plt.plot(t_arr[:number_of_samples[i],i],i_ideal_arr[:number_of_samples[i],i],label = "ideal_"+str(i))
+            plt.plot(t_arr[start_second*Hz:end_second*Hz,i],i_ideal_arr[start_second*Hz:end_second*Hz,i],label = "ideal_"+str(i))
         plt.title("I controller")
+    plt.grid()
+    plt.legend()
+
+if plot_u:
+    plt.figure()
+    for i in range(len(file_names)):
+        plt.plot(t_arr[start_second*Hz:end_second*Hz,i],u_arr[start_second*Hz:end_second*Hz,i],label = "u_" +str(i))
+        plt.plot(t_arr[start_second*Hz:end_second*Hz,i],ref_arr[start_second*Hz:end_second*Hz,i] - meas_arr[start_second*Hz:end_second*Hz,i],label = "error"+ str(i))
     plt.grid()
     plt.legend()
 
@@ -178,17 +197,17 @@ plt.show()
 
 # plt.figure()
 # for i in range(len(file_names)):
-#     plt.plot(t[:number_of_samples[i],i],u_p[:number_of_samples[i],i],label = "u_p"+str(i))
-#     # plt.plot(t[:number_of_samples[i],i],u_d[:number_of_samples[i],i],label = "u_d"+str(i))
-#     # plt.plot(t[:number_of_samples[i],i],u_pd[:number_of_samples[i],i],label = "u_pd"+str(i))
-#     # plt.plot(t[:number_of_samples[i],i],u_i[:number_of_samples[i],i],label = "u_i"+str(i))
+#     plt.plot(t[start_second*Hz:end_second*Hz,i],u_p[start_second*Hz:end_second*Hz,i],label = "u_p"+str(i))
+#     # plt.plot(t[start_second*Hz:end_second*Hz,i],u_d[start_second*Hz:end_second*Hz,i],label = "u_d"+str(i))
+#     # plt.plot(t[start_second*Hz:end_second*Hz,i],u_pd[start_second*Hz:end_second*Hz,i],label = "u_pd"+str(i))
+#     # plt.plot(t[start_second*Hz:end_second*Hz,i],u_i[start_second*Hz:end_second*Hz,i],label = "u_i"+str(i))
 #     # #
 #     # plt.plot(t[:,i],ref[:,i]-meas[:,i],label = "ERROR")
-#     # plt.plot(t[:number_of_samples[i],i],snn_pd_out[:number_of_samples[i],i],label = "snn_pd"+str(i))
+#     # plt.plot(t[start_second*Hz:end_second*Hz,i],snn_pd_out[start_second*Hz:end_second*Hz,i],label = "snn_pd"+str(i))
 
-# #     u_pd_ideal[:number_of_samples[i],i] = np.clip(u_pd_ideal[:number_of_samples[i],i],-10,10) 
-# #     # plt.plot(t[:number_of_samples[i],i],u_pd_ideal[:number_of_samples[i],i],label = "u_pd_ideal"+str(i))
-# #     # plt.plot(t[:number_of_samples[i],i],u_i_ideal[:number_of_samples[i],i],label = "u_i_ideal"+str(i))
+# #     u_pd_ideal[start_second*Hz:end_second*Hz,i] = np.clip(u_pd_ideal[start_second*Hz:end_second*Hz,i],-10,10) 
+# #     # plt.plot(t[start_second*Hz:end_second*Hz,i],u_pd_ideal[start_second*Hz:end_second*Hz,i],label = "u_pd_ideal"+str(i))
+# #     # plt.plot(t[start_second*Hz:end_second*Hz,i],u_i_ideal[start_second*Hz:end_second*Hz,i],label = "u_i_ideal"+str(i))
 
-# #     mse = np.mean((u_pd_ideal[:number_of_samples[i],i]-u_pd[:number_of_samples[i],i])**2)
+# #     mse = np.mean((u_pd_ideal[start_second*Hz:end_second*Hz,i]-u_pd[start_second*Hz:end_second*Hz,i])**2)
 #     # print(mse)

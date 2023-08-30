@@ -116,7 +116,7 @@ class Encoding_L1_Decoding_SNN(L1_Decoding_SNN):
 			
 
 	def forward(self, input_, state_l0, state_l1, state_l2):
-		input = input_
+		input = input_[0,0,:]
 		state_l0,spikes_l0 = self.l0(state_l0,input)
 		state_l1,spikes_l1 = self.l1(state_l1,spikes_l0)
 		state_l2, _ 		= self.l2(state_l2,spikes_l1)
@@ -129,6 +129,7 @@ def init_l1_l2(neurons,layer_set):
 	init_param = {}
 	l1_adapt				= layer_set["l1"]["adaptive"]
 	l1_recur				= layer_set["l1"]["recurrent"]
+	l1_recur2x2				= layer_set["l1"]["recurrent_2x2"]
 	encoding_layer			= layer_set["l0"]["enabled"]
 	l1_shared_wb 			= layer_set["l1"]["shared_weight_and_bias"]
 	l2_shared_wb 			= layer_set["l2"]["shared_weight_and_bias"]
@@ -207,7 +208,10 @@ def init_l1_l2(neurons,layer_set):
 
 	# Init Recurrent Weights
 	if l1_recur:
-		init_param["l1_weights_rec"]= torch.ones(num_neurons_l1,num_neurons_l1).float()
+		if l1_recur2x2:
+			init_param["l1_weights_rec"]= torch.ones(num_neurons_l1*2).float()
+		else:
+			init_param["l1_weights_rec"]= torch.ones(num_neurons_l1,num_neurons_l1).float()
 	return init_param
 
 

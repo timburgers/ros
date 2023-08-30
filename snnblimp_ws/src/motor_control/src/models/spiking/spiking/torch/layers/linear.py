@@ -207,6 +207,9 @@ class BaseRecurrentLinear(nn.Module):
         try: self.w_diagonal = layer_setting["w_diagonal"]
         except: self.w_diagonal = False
 
+        try: self.rec_2x2 = layer_setting["recurrent_2x2"]
+        except: self.rec_2x2 = False
+
         try: self.w_diagonal_2x2 = layer_setting["w_diagonal_2x2"]
         except: self.w_diagonal_2x2 = False
 
@@ -353,6 +356,17 @@ class BaseRecurrentLinear(nn.Module):
         if self.adaptive and self.adapt_share_baseleak_t:
             self.neuron.base_t = torch.nn.Parameter(torch.flatten(torch.stack((self.neuron.base_t,self.neuron.base_t),dim=1)))
             self.neuron.leak_t = torch.nn.Parameter(torch.flatten(torch.stack((self.neuron.leak_t,self.neuron.leak_t),dim=1)))
+        
+        ### RESHAPE BASE AND LEAK
+        if self.rec_2x2:
+            ind_param_start = 0
+            self.rec_weight = None
+            for idx_block in range(int(self.output_size/2)):
+                block_2x2 = self.rec.weight[ind_param_start:ind_param_start+4].reshape((2,2))
+                self.rec_weight = block_2x2 if self.rec_weight == None else torch.block_diag(self.rec_weight, block_2x2)
+                ind_param_start += 4
+            self.rec.weight = torch.nn.Parameter(self.rec_weight) 
+
 
 
     def forward(self, state, input_):
