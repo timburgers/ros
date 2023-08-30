@@ -32,14 +32,14 @@ FREQUENCY = 10.0
 MODE = "snn"        #either "pid" or "pid_xm" (x=[3,4]) or "pid_h" or "snn"
 
 P = 0
-I = 0.75
+I = 0
 D = 0
 
 #Only applicable if MODE == "snn" NOTE: when None is specified, the other controllers will use PID
 SNN_PID = None          # Will override the P, I and D variables
 SNN_PD = "655-brisk-sun" # Will override the P and D varaibles
 SNN_P = None
-SNN_I = None
+SNN_I = "1028-divine-terrain"
 SNN_D = None
 
 
