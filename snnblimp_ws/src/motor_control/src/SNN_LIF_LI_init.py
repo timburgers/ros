@@ -75,7 +75,7 @@ class L1_Decoding_SNN(nn.Module):
 		batch_size, seq_length, n_inputs = input_batch.size()
 		# Different pass if the for loop is outside of the forward pass aka, seq_len is one
 		if seq_length ==1:
-			input = input_batch[0,0,:]
+			input = input_batch
 			state_l1,spikes_l1 = self.l1(state_l1,input)
 			state_l2, _ = self.l2(state_l2,spikes_l1)
 		
@@ -116,7 +116,7 @@ class Encoding_L1_Decoding_SNN(L1_Decoding_SNN):
 			
 
 	def forward(self, input_, state_l0, state_l1, state_l2):
-		input = input_[0,0,:]
+		input = input_
 		state_l0,spikes_l0 = self.l0(state_l0,input)
 		state_l1,spikes_l1 = self.l1(state_l1,spikes_l0)
 		state_l2, _ 		= self.l2(state_l2,spikes_l1)
