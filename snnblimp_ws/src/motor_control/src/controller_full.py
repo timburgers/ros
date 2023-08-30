@@ -39,7 +39,7 @@ D = 0
 SNN_PID = None          # Will override the P, I and D variables
 SNN_PD = "655-brisk-sun" # Will override the P and D varaibles
 SNN_P = None
-SNN_I = "1028-divine-terrain"
+SNN_I = "1020-summer-plasma"
 SNN_D = None
 
 
