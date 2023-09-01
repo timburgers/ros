@@ -37,7 +37,7 @@ D = 0
 
 #Only applicable if MODE == "snn" NOTE: when None is specified, the other controllers will use PID
 SNN_PID = None          # Will override the P, I and D variables
-SNN_PD = "444-fragrant-pyramid" #"655-brisk-sun" # Will override the P and D varaibles
+SNN_PD = "271-prime-bee" #"655-brisk-sun" # Will override the P and D varaibles
 SNN_P = None
 SNN_I = None
 SNN_D = None
