@@ -9,18 +9,18 @@ plt.rcParams.update({'font.size': 16})
 folder_path = "/home/tim/ros/snnblimp_ws/rosbag/new/csv/"
 Hz = 10
 Kp = 9
-Ki = 0.1
+Ki = 0.75
 Kd = 14
 old_layout = False
 
 start_second = 0
-end_second = 430
+end_second = 248
 
 plot_p = False
 plot_i = False
 plot_d = False
 plot_pd = False
-plot_ideal = True
+plot_ideal = False
 plot_u = False
 
 file_names = []
@@ -128,7 +128,7 @@ for file in file_names:
 
 
 plt.plot(t_arr[start_second*Hz:end_second*Hz,0],ref_arr[start_second*Hz:end_second*Hz,0],color = "r", linestyle="--", label="Reference")
-plt.title("SNN Controller PID (10Hz)")
+# plt.title("SNN Controller PID (10Hz)")
 for i in range(len(file_names)):
     if file_names[i] == "PID.csv":
         plt.plot(t_arr[start_second*Hz:end_second*Hz,i],meas_arr[start_second*Hz:end_second*Hz,i],label = file_names[i].split(".")[0], color = "k", linewidth=3)
