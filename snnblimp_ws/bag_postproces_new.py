@@ -8,12 +8,12 @@ import numpy as np
 import os
 
 
-limit_u = True
-limit_p = True
+limit_u = False
+limit_p = False
 lim_p = 15
-limit_d = True
+limit_d = False
 lim_d = 15
-limit_pd = True
+limit_pd = False
 lim_pd = 15
 
 include_snn = True
@@ -134,9 +134,9 @@ for file in all_files:
     df_final["time"] = df_final["time"] - df_final["time"].iloc[0]
 
 
-    # remove first step which was not responding
-    df_final = df_final.iloc[:9500]
-    df_final["time"] = df_final["time"] - df_final["time"].iloc[0]
+    # # remove first step which was not responding
+    # df_final = df_final.iloc[:9500]
+    # df_final["time"] = df_final["time"] - df_final["time"].iloc[0]
 
 
     file_csv = file.split(".")[0] + ".csv"

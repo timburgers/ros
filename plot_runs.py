@@ -13,8 +13,8 @@ Ki = 0.1
 Kd = 14
 old_layout = False
 
-start_second = 50
-end_second = None
+start_second = 0
+end_second = 430
 
 plot_p = False
 plot_i = False
