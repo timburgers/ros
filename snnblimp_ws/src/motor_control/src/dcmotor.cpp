@@ -1,4 +1,7 @@
 #include "dcmotor.hpp"
+#include <iostream>
+#include <ros/ros.h>
+#include <stdlib.h>
 // #include <signal.h>
 
 using namespace std;
@@ -104,6 +107,7 @@ void Motor::checkForTimeout(const ros::TimerEvent&)
     {
         // Calculate the time since the last message was received
         ros::Duration time_since_last_msg = ros::Time::now() - last_received_time_;
+        ROS_INFO_STREAM("time checked");
 
         // Check if the time since the last message is greater than 1 second
         if (time_since_last_msg.toSec() > 2.0)
@@ -112,7 +116,9 @@ void Motor::checkForTimeout(const ros::TimerEvent&)
             pwmWrite(_cw_pwmPin, 0);
             digitalWrite(_ccw_dirPin, 0);
             pwmWrite(_ccw_pwmPin, 0);
+            ROS_INFO_STREAM("Killed motor since not receiving message");
             ros::shutdown();
+            
         }
     }
 

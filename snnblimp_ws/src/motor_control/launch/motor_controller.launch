@@ -8,6 +8,8 @@
     <arg name="rigid_body"         default="true"/>
     <arg name="plotjuggler"        default="true"/>
     <arg name="plotjuggler_delay"  default="0.0"/>
+    <arg name="required"           default="false"/>
+
 
 
     <node
@@ -26,7 +28,7 @@
         name="subscribe_to_speed"
         output="screen"
         launch-prefix="sudo -E"
-        required="true"
+        required="$(arg required)"
     >
         <param name="cw_pwmPin" value="19" />
         <param name="cw_dirPin" value="26" />
@@ -49,7 +51,7 @@
         type="href.py"
         name="reference_input"
         output="screen"
-        required="true"
+        required="$(arg required)"
     />
     
     <!-- <node
