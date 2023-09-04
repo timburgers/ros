@@ -8,7 +8,7 @@
     <arg name="rigid_body"         default="true"/>
     <arg name="plotjuggler"        default="true"/>
     <arg name="plotjuggler_delay"  default="0.0"/>
-    <arg name="required"           default="false"/>
+    <arg name="required"           default="true"/>
 
 
 

@@ -32,7 +32,7 @@ FREQUENCY = 10.0
 MODE = "pid"        #either "pid" or "pid_xm" (x=[3,4]) or "pid_h" or "snn"
 
 P = 9
-I = 0.75
+I = 0.0
 D = 14
 
 #Only applicable if MODE == "snn" NOTE: when None is specified, the other controllers will use PID
