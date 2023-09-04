@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
     if MODE == "list":
         # Parameters
-        frequency = 1/50                     # [Hz]
+        frequency = 1/70                     # [Hz]
         # h_ref_list = [1.0,0.5,1.0,0.5,1.0,0.5]     #standard 1
         # h_ref_list = [1.4,0.4,1.4,0.4,1.4,0.4]
         h_ref_list = [0.5,1.0,0.5,1.5,0.5,1.0,0.5,1.5,0.5,0.5]    #stand-50s
