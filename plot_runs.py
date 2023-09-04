@@ -14,7 +14,7 @@ Kd = 14
 old_layout = False
 
 start_second = 0
-end_second = None
+end_second = 620
 
 plot_p = False
 plot_i = False
