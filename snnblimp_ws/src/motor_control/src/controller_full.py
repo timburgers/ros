@@ -29,7 +29,7 @@ from motor_control.msg import SNN_seperate
 
 # Global variables:
 FREQUENCY = 10.0
-MODE = "pid"        #either "pid" or "pid_xm" (x=[3,4]) or "pid_h" or "snn"
+MODE = "snn"        #either "pid" or "pid_xm" (x=[3,4]) or "pid_h" or "snn"
 
 P = 9
 I = 0.0
@@ -39,7 +39,7 @@ D = 14
 SNN_PID = None          # Will override the P, I and D variables
 SNN_PD = None #"900-wobbly-totem" #"1015-leafy-yogurt" #"655-brisk-sun" # Will override the P and D varaibles
 SNN_P = None
-SNN_I = None
+SNN_I = "108-crimson-dew"
 SNN_D = None
 
 
