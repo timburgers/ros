@@ -39,7 +39,7 @@ D = 14
 SNN_PID = None          # Will override the P, I and D variables
 SNN_PD = None #"900-wobbly-totem" #"1015-leafy-yogurt" #"655-brisk-sun" # Will override the P and D varaibles
 SNN_P = None
-SNN_I = "101-vibrant-paper"
+SNN_I = "124-magic-shape"
 SNN_D = None
 
 
