@@ -37,9 +37,9 @@ D = 14
 
 #Only applicable if MODE == "snn" NOTE: when None is specified, the other controllers will use PID
 SNN_PID = None          # Will override the P, I and D variables
-SNN_PD = None #"900-wobbly-totem" #"1015-leafy-yogurt" #"655-brisk-sun" # Will override the P and D varaibles
+SNN_PD = "655-brisk-sun" #"900-wobbly-totem" #"1015-leafy-yogurt" #"655-brisk-sun" # Will override the P and D varaibles
 SNN_P = None
-SNN_I = "121-icy-gorge"
+SNN_I = "151-sparkling-deluge"
 SNN_D = None
 
 
