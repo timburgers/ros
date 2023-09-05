@@ -31,9 +31,9 @@ from motor_control.msg import SNN_seperate
 FREQUENCY = 10.0
 MODE = "snn"        #either "pid" or "pid_xm" (x=[3,4]) or "pid_h" or "snn"
 
-P = 9
+P = 0
 I = 0.0
-D = 14
+D = 0
 
 #Only applicable if MODE == "snn" NOTE: when None is specified, the other controllers will use PID
 SNN_PID = None          # Will override the P, I and D variables
