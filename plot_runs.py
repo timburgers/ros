@@ -102,18 +102,28 @@ for file in file_names:
             meas_arr[row_ind,file_ind] =  meas
             ref_arr[row_ind,file_ind] =  ref  
             error_arr[row_ind,file_ind] = error
-            p_arr[row_ind,file_ind] = p
-            i_arr[row_ind,file_ind] =  i
-            d_arr[row_ind,file_ind] = d
-            pd_arr[row_ind,file_ind] =  p_d  
-            u_arr[row_ind,file_ind] =  u  
+            if plot_p:
+                p_arr[row_ind,file_ind] = p
+            if plot_i:
+                i_arr[row_ind,file_ind] =  i
+            if plot_d:
+                d_arr[row_ind,file_ind] = d
+            if plot_pd:
+                pd_arr[row_ind,file_ind] =  p_d
+            if plot_u:  
+                u_arr[row_ind,file_ind] =  u  
 
             if len(row) ==14:
-                snn_p_arr[row_ind,file_ind] =  snn_p
-                snn_i_arr[row_ind,file_ind] =  snn_i
-                snn_d_arr[row_ind,file_ind] =  snn_d
-                snn_pd_arr[row_ind,file_ind] =  snn_pd
-                snn_pid_arr[row_ind,file_ind] =  snn_pid  
+                if plot_p:
+                    snn_p_arr[row_ind,file_ind] =  snn_p
+                if plot_i:
+                    snn_i_arr[row_ind,file_ind] =  snn_i
+                if plot_d:
+                    snn_d_arr[row_ind,file_ind] =  snn_d
+                if plot_pd:
+                    snn_pd_arr[row_ind,file_ind] =  snn_pd
+                if plot_u:
+                    snn_pid_arr[row_ind,file_ind] =  snn_pid  
 
             # Calculate the ideal responses
             error = float(error)
