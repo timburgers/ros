@@ -31,10 +31,12 @@ if __name__ == '__main__':
 
     if MODE == "list":
         # Parameters
-        frequency = 1/70                     # [Hz]
+        time_new_msg = 70                     # [s]
+        freq_repeat = 10
         # h_ref_list = [1.0,0.5,1.0,0.5,1.0,0.5]     #standard 1
         # h_ref_list = [1.4,0.4,1.4,0.4,1.4,0.4]
-        h_ref_list = [0.5,1.0,0.5,1.5,0.5,1.0,0.5,1.5,0.5,0.5]    #stand-50s
+        # h_ref_list = [0.5,1.0,0.5,1.5,0.5,1.0,0.5,1.5,0.5,0.5]    #stand-50s
+        h_ref_list = [0.5,1.0,0.5,0.5]
 
 
         # h_ref_list = [0.3,0.5,1.0,1.5,1.0,0.5,1.5]   #standard 2+
@@ -44,16 +46,25 @@ if __name__ == '__main__':
         ind = 0
         rospy.wait_for_message("/motor_control", MotorCommand, timeout=None)
         time.sleep(1)
-        rate = rospy.Rate(frequency)
+        rate = rospy.Rate(freq_repeat)
+        prev_time = rospy.get_time()-(time_new_msg+10)
 
         while not rospy.is_shutdown():
+            current_time = rospy.get_time()
+
+            if current_time-prev_time>time_new_msg:
+                prev_time = current_time
+                ind +=1
+            
             msg=Float32()
-            msg.data=h_ref_list[ind]
+            msg.data=h_ref_list[ind-1]
+
             pub_h_ref.publish(msg)
+
             rate.sleep()
             if ind >= len(h_ref_list)-1:
                 rospy.signal_shutdown("Time Over")
-            else: ind +=1
+            else: pass
     
 
 
